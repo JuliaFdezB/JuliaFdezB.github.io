@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Julia Fernández Bermejo</title>
+<style>
+  /* ── Reset ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: A4; margin: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.4;
+    color: #334155;
+    background: #cbd5e1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Page ── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 64mm 1fr;
+  }
+  @media screen {
+    .page { margin: 12mm auto; box-shadow: 0 4px 30px rgba(0,0,0,.15); }
+  }
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; min-height: 0; height: 297mm; overflow: hidden; }
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: #1E293B;
+    color: #CBD5E1;
+    padding: 12mm 5mm 8mm 5.5mm;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sb-section {}
+  .sb-heading {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #93C5FD;
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(147,197,253,.2);
+  }
+
+  /* Contact */
+  .contact-item { margin-bottom: 5px; line-height: 1.35; }
+  .contact-label {
+    display: block;
+    font-size: 6pt;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 0.5px;
+  }
+  .contact-value { font-size: 8pt; color: #E2E8F0; word-break: break-all; }
+
+  /* Skills */
+  .skill-group { margin-bottom: 5px; }
+  .skill-group-title { font-size: 7.5pt; font-weight: 600; color: #E2E8F0; margin-bottom: 2px; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 2.5px; }
+  .tag {
+    background: rgba(147,197,253,.1);
+    color: #BFDBFE;
+    padding: 1.5px 5px;
+    border-radius: 2px;
+    font-size: 7pt;
+    line-height: 1.4;
+  }
+
+  /* Languages */
+  .lang-item { margin-bottom: 4px; }
+  .lang-name { font-weight: 600; font-size: 8pt; color: #E2E8F0; }
+  .lang-detail { font-size: 7pt; color: #94A3B8; display: block; }
+
+  /* Availability */
+  .avail { font-size: 7.5pt; color: #94A3B8; line-height: 1.4; }
+
+  /* ── Main ── */
+  .main { padding: 12mm 8mm 8mm 7mm; }
+
+  .name {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1;
+    letter-spacing: -.4px;
+  }
+  .subtitle {
+    font-size: 10pt;
+    color: #64748B;
+    margin-top: 1.5mm;
+    font-weight: 400;
+  }
+  .profile {
+    margin-top: 3.5mm;
+    margin-bottom: 4.5mm;
+    font-size: 8pt;
+    line-height: 1.5;
+    color: #475569;
+  }
+
+  /* Sections */
+  .section { margin-bottom: 3.5mm; }
+  .section-title {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #0F172A;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding-bottom: 1.5mm;
+    border-bottom: 1.5px solid #3B82F6;
+    margin-bottom: 2.5mm;
+  }
+
+  /* Entries */
+  .entry { margin-bottom: 2.5mm; }
+  .entry-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .entry-title { font-size: 8.5pt; font-weight: 600; color: #0F172A; }
+  .entry-date { font-size: 7pt; color: #94A3B8; white-space: nowrap; margin-left: 2mm; flex-shrink: 0; }
+  .entry-sub { font-size: 7.5pt; color: #64748B; font-style: italic; }
+  .entry-meta { font-size: 7pt; color: #94A3B8; margin-top: 0.3mm; }
+  .entry-desc { font-size: 7.5pt; color: #475569; margin-top: 0.5mm; line-height: 1.45; }
+
+  .award { font-size: 7.5pt; color: #0F172A; font-weight: 500; margin-top: 0.5mm; }
+  .award::before { content: "\2605  "; color: #F59E0B; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar">
+
+    <div class="sb-section">
+      <h3 class="sb-heading">Contact</h3>
+      <div class="contact-item">
+        <span class="contact-label">Email</span>
+        <span class="contact-value">juliafernandezbermejo@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Phone</span>
+        <span class="contact-value">+34 634 405 442</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Location</span>
+        <span class="contact-value">Donostia-San Sebastián, Spain</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Portfolio</span>
+        <span class="contact-value">juliafdezb.github.io</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">itch.io</span>
+        <span class="contact-value">julia-fdez.itch.io</span>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3 class="sb-heading">Technical Skills</h3>
+      <div class="skill-group">
+        <div class="skill-group-title">Programming</div>
+        <div class="skill-tags">
+          <span class="tag">C++</span>
+          <span class="tag">C#</span>
+          <span class="tag">Python</span>
+          <span class="tag">HLSL / GLSL</span>
+          <span class="tag">HTML/CSS/JS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Engines & Tools</div>
+        <div class="skill-tags">
+          <span class="tag">Unity</span>
+          <span class="tag">Git</span>
+          <span class="tag">Studio 2.0</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">3D</div>
+        <div class="skill-tags">
+          <span class="tag">Blender</span>
+          <span class="tag">3ds Max</span>
+          <span class="tag">MudBox</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">2D</div>
+        <div class="skill-tags">
+          <span class="tag">Krita</span>
+          <span class="tag">FireAlpaca</span>
+          <span class="tag">Pixel Art</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Design</div>
+        <div class="skill-tags">
+          <span class="tag">Game Design</span>
+          <span class="tag">Level Design</span>
+          <span class="tag">UX / UI</span>
+          <span class="tag">Prototyping</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3 class="sb-heading">Languages</h3>
+      <div class="lang-item">
+        <span class="lang-name">Spanish</span>
+        <span class="lang-detail">Native</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Basque</span>
+        <span class="lang-detail">Native</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">English</span>
+        <span class="lang-detail">Proficient — Cambridge CAE</span>
+        <span class="lang-detail">Exchange year in USA</span>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <h3 class="sb-heading">Availability</h3>
+      <p class="avail">Open to remote work and relocation</p>
+    </div>
+
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main">
+
+    <h1 class="name">Julia Fernández Bermejo</h1>
+    <p class="subtitle">Game Developer &amp; Artist</p>
+
+    <p class="profile">
+      Video Game Design &amp; Development graduate (Universitat Jaume I, 2026) with a multidisciplinary skill set covering gameplay programming, 2D art, and game design. Proven ability to deliver client-facing games in cross-functional teams, with award-winning results. Strong creative drive and experience building digital audiences from scratch.
+    </p>
+
+    <!-- Education -->
+    <div class="section">
+      <h2 class="section-title">Education</h2>
+      <div class="entry">
+        <div class="entry-row">
+          <span class="entry-title">B.Sc. in Video Game Design &amp; Development</span>
+          <span class="entry-date">2022 – Jul 2026</span>
+        </div>
+        <div class="entry-sub">Universitat Jaume I, Castellón de la Plana</div>
+      </div>
+      <div class="entry">
+        <div class="entry-row">
+          <span class="entry-title">Bachillerato (High School Diploma)</span>
+          <span class="entry-date">2019 – 2021</span>
+        </div>
+        <div class="entry-sub">Ikastola Ekintza, Donostia-San Sebastián</div>
+        <div class="entry-desc">Exchange year at Lee's Summit North High School, Kansas City, MO, USA (2019–2020)</div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="section">
+      <h2 class="section-title">Projects</h2>
+
+      <div class="entry">
+        <span class="entry-title">Heredero del Oficio</span>
+        <div class="entry-meta">Artist &amp; Designer · Unity, FireAlpaca · Team of 6 · 4 months</div>
+        <div class="entry-desc">
+          Educational game commissioned by the Culture Council of L'Alcora to teach children about local pottery heritage. Led art direction, character design, UI, and game design. Coordinated with town representatives and presented the final product to schoolchildren.
+        </div>
+        <div class="award">Award for Game with Most Potential — Michael Santorum, TequilaWorks (2025)</div>
+        <div class="award">Audience Award for Best Video Game — Universitat Jaume I (2025)</div>
+      </div>
+
+      <div class="entry">
+        <span class="entry-title">Under the Influence</span>
+        <div class="entry-meta">Writer &amp; Designer · Team of 4 · 2 months</div>
+        <div class="entry-desc">
+          Narrative game for teenage addiction prevention. Led narrative design: world-building, character development, and branching dialogue systems.
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="entry-title">Wool &amp; Thread</span>
+        <div class="entry-meta">Game Designer · Solo · 3 months</div>
+        <div class="entry-desc">
+          Cozy management simulation about building a knitting business from a local shop to an online brand. Designed complete game systems, economy, and progression. Full GDD available.
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="entry-title">Game Jam</span>
+        <div class="entry-meta">Team participant</div>
+        <div class="entry-desc">
+          Rapid-prototyped and shipped a playable game under strict time constraints in a collaborative environment.
+        </div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section">
+      <h2 class="section-title">Experience</h2>
+
+      <div class="entry">
+        <div class="entry-row">
+          <span class="entry-title">Research Intern — INIT, Universitat Jaume I</span>
+          <span class="entry-date">2026 – Present</span>
+        </div>
+        <div class="entry-desc">
+          3D modeling and digital assembly using Studio 2.0 within an interdisciplinary research group.
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-row">
+          <span class="entry-title">Content Creator &amp; Entrepreneur — JuliaBudget</span>
+          <span class="entry-date"><!-- FILL IN --> – Present</span>
+        </div>
+        <div class="entry-desc">
+          Built a personal finance content brand from scratch, growing to 100K+ TikTok followers and 20K+ on Instagram in under a year. Launched and managed an online store selling original products. Skills applied: content strategy, video production, audience growth, and e-commerce.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

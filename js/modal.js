@@ -4,8 +4,8 @@
 const projectsData = {
   'heredero-del-oficio': {
     title: 'Heredero del Oficio',
-    images: ['assets/images/projects/PortadaJuegoItchHDO.png'],
-    video: 'assets/images/projects/Trailer_HerederoDelOficio.mp4',
+    images: ['assets/images/projects/PortadaJuegoItchHDO.jpg'],
+    video: 'https://www.youtube.com/embed/T_Q7CUA4oM4',
     role: 'Artist & Designer',
     team: '6 people',
     duration: '4 months',
@@ -18,7 +18,7 @@ const projectsData = {
   },
   'under-the-influence': {
     title: 'Under the Influence',
-    images: ['assets/images/projects/Under the influence.png'],
+    images: ['assets/images/projects/Under the influence.jpg'],
     role: 'Writer & Designer',
     team: '4 people',
     duration: '2 months',
@@ -31,7 +31,7 @@ const projectsData = {
   },
   'wool-and-thread': {
     title: 'Wool & Thread',
-    images: ['assets/images/projects/Wool & Thread.png'],
+    images: ['assets/images/projects/Wool & Thread.jpg'],
     role: 'Game Designer',
     team: 'Solo',
     duration: '3 months',
@@ -68,9 +68,20 @@ function openProjectModal(projectId) {
 
   modalTitle.textContent = data.title;
 
-  // Carousel — video or images
-  const carouselContent = modalCarousel.querySelector('img, .placeholder-img, video');
-  if (data.video) {
+  // Carousel — video/youtube or images
+  const carouselContent = modalCarousel.querySelector('img, .placeholder-img, video, iframe');
+  if (data.video && data.video.includes('youtube.com')) {
+    const iframe = document.createElement('iframe');
+    iframe.src = data.video;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    if (carouselContent) carouselContent.replaceWith(iframe);
+    carouselPrev.style.display = 'none';
+    carouselNext.style.display = 'none';
+  } else if (data.video) {
     const video = document.createElement('video');
     video.src = data.video;
     video.controls = true;
@@ -84,8 +95,8 @@ function openProjectModal(projectId) {
   } else {
     currentImages = data.images;
     currentImageIndex = 0;
-    // Restore img if it was replaced by video
-    const existing = modalCarousel.querySelector('video, .placeholder-img');
+    // Restore img if it was replaced by video/iframe
+    const existing = modalCarousel.querySelector('video, iframe, .placeholder-img');
     if (existing) {
       const img = document.createElement('img');
       img.alt = 'Project screenshot';
@@ -158,6 +169,8 @@ function updateCarouselImage() {
 function closeModal() {
   const video = modalCarousel.querySelector('video');
   if (video) video.pause();
+  const iframe = modalCarousel.querySelector('iframe');
+  if (iframe) iframe.src = '';
   modalOverlay.classList.remove('active');
   document.body.style.overflow = '';
 }
@@ -229,4 +242,62 @@ document.querySelectorAll('.gallery__item').forEach(item => {
     const img = item.querySelector('img');
     if (img) openLightbox(img.src, img.alt);
   });
+});
+
+/* ========================================
+   CV Modal
+   ======================================== */
+const cvOverlay = document.getElementById('cv-overlay');
+const cvIframe = document.getElementById('cv-iframe');
+const cvDownloadBtn = document.getElementById('cv-download');
+const cvCloseBtn = document.getElementById('cv-close');
+const cvTabs = document.querySelectorAll('.cv-tab');
+let currentCvLang = 'en';
+
+const cvFiles = {
+  en: 'cv/cv_en.html',
+  es: 'cv/cv_es.html'
+};
+
+document.getElementById('view-cv-btn').addEventListener('click', () => {
+  cvOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+});
+
+function closeCvModal() {
+  cvOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+cvCloseBtn.addEventListener('click', closeCvModal);
+
+cvOverlay.addEventListener('click', (e) => {
+  if (e.target === cvOverlay) closeCvModal();
+});
+
+cvTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    cvTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCvLang = tab.dataset.lang;
+    cvIframe.src = cvFiles[currentCvLang];
+  });
+});
+
+const cvPdfFiles = {
+  en: 'cv/JuliaFernandezBermejoCVenglish.pdf',
+  es: 'cv/JuliaFernandezBermejoCVespañol.pdf'
+};
+
+cvDownloadBtn.addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.href = cvPdfFiles[currentCvLang];
+  link.download = '';
+  link.click();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && cvOverlay.classList.contains('active')) {
+    closeCvModal();
+  }
 });
