@@ -1,10 +1,59 @@
 /* ========================================
+   Freezing the page behind a dialog
+
+   Setting overflow:hidden on the body does not stop the scroll on iOS: the
+   finger drags the page behind the dialog instead of the dialog itself.
+   Pinning the body with position:fixed does stop it, as long as we remember
+   where the page was and put it back on the way out.
+
+   The counter is there because several things can be open at once (the menu
+   and then a project, say) and the last one to close must be the one that
+   gives the page back.
+   ======================================== */
+const scrollLock = { depth: 0, y: 0 };
+
+window.freezeBackground = (freeze) => {
+  const body = document.body;
+
+  if (freeze) {
+    if (scrollLock.depth === 0) {
+      scrollLock.y = window.scrollY;
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollLock.y}px`;
+      body.style.left = '0';
+      body.style.right = '0';
+      body.style.width = '100%';
+    }
+    scrollLock.depth++;
+    return;
+  }
+
+  scrollLock.depth = Math.max(0, scrollLock.depth - 1);
+  if (scrollLock.depth > 0) return;
+
+  body.style.position = '';
+  body.style.top = '';
+  body.style.left = '';
+  body.style.right = '';
+  body.style.width = '';
+
+  /* Straight back, no animation: the page scrolls smoothly by default, and
+     from a frozen body that means watching it travel all the way down. */
+  const html = document.documentElement;
+  const smooth = html.style.scrollBehavior;
+  html.style.scrollBehavior = 'auto';
+  window.scrollTo(0, scrollLock.y);
+  html.style.scrollBehavior = smooth;
+};
+
+/* ========================================
    Navigation
    ======================================== */
 const nav = document.querySelector('.nav');
 const hamburger = document.querySelector('.nav__hamburger');
 const navLinks = document.querySelector('.nav__links');
 const navLinkItems = document.querySelectorAll('.nav__link');
+const navBackdrop = document.querySelector('.nav__backdrop');
 
 // Scroll effect
 window.addEventListener('scroll', () => {
@@ -12,19 +61,48 @@ window.addEventListener('scroll', () => {
 });
 
 // Hamburger menu
+function setMenu(open) {
+  if (navLinks.classList.contains('open') === open) return;
+  hamburger.classList.toggle('active', open);
+  navLinks.classList.toggle('open', open);
+  hamburger.setAttribute('aria-expanded', String(open));
+  window.freezeBackground(open);
+
+  /* The veil has to exist before it can fade, hence the two steps. */
+  if (!navBackdrop) return;
+  if (open) {
+    navBackdrop.hidden = false;
+    requestAnimationFrame(() => navBackdrop.classList.add('visible'));
+  } else {
+    navBackdrop.classList.remove('visible');
+    setTimeout(() => {
+      if (!navLinks.classList.contains('open')) navBackdrop.hidden = true;
+    }, 300);
+  }
+}
+
 hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  navLinks.classList.toggle('open');
-  document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+  setMenu(!navLinks.classList.contains('open'));
 });
 
 // Close mobile menu on link click
 navLinkItems.forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navLinks.classList.remove('open');
-    document.body.style.overflow = '';
-  });
+  link.addEventListener('click', () => setMenu(false));
+});
+
+// Tapping anywhere outside the panel closes it, which is what people try
+// first on a phone. The tap lands on the veil, so it never reaches the card
+// underneath and opens a project by accident.
+navBackdrop?.addEventListener('click', () => setMenu(false));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') setMenu(false);
+});
+
+// Rotating the phone or widening the window brings the desktop menu back:
+// the panel must not stay open and frozen behind it.
+window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
+  if (e.matches) setMenu(false);
 });
 
 // Active section highlighting
@@ -93,7 +171,12 @@ galleryFilterBtns.forEach(btn => {
 /* ========================================
    Gallery Stacks — delayed collapse
    ======================================== */
+/* Sin ratón las pilas no se despliegan: el CSS las deshace y enseña todas
+   las fotos en la rejilla, porque si no las de debajo quedan inalcanzables. */
+const hasHover = window.matchMedia('(hover: hover)').matches;
+
 document.querySelectorAll('.gallery__stack').forEach(stack => {
+  if (!hasHover) return;
   let closeTimer = null;
 
   stack.addEventListener('mouseenter', () => {
@@ -131,22 +214,51 @@ function initParticles() {
   const canvas = document.querySelector('.hero__canvas');
   if (!canvas) return;
 
+  // Nobody should get a looping animation they asked their system to stop.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const ctx = canvas.getContext('2d');
   let particles = [];
-  let animationId;
+  let animationId = null;
+  let width = 0;
+  let height = 0;
+
+  /* The two colours come from the theme, so they change with it — but asking
+     the browser for them inside the drawing loop meant one lookup per pair of
+     particles, thousands of them every frame, which is what made the hero
+     crawl on a phone. They are read once here and again when the theme is
+     switched. */
+  let dotColor = '';
+  let lineColor = '';
+
+  function readColors() {
+    const styles = getComputedStyle(document.documentElement);
+    dotColor = styles.getPropertyValue('--particle-dot').trim();
+    lineColor = styles.getPropertyValue('--particle-line').trim();
+  }
 
   function resize() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    /* Drawing at the screen's own resolution: on a phone the canvas is
+       stretched over two or three device pixels and the dots look smeared. */
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.offsetWidth;
+    height = canvas.offsetHeight;
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
   function createParticles() {
+    /* Fewer dots on a narrow screen: they are smaller, closer together and
+       cost more, since the connection check grows with the square of them. */
+    const density = width < 700 ? 24000 : 15000;
+    const count = Math.min(Math.floor((width * height) / density), 120);
+
     particles = [];
-    const count = Math.floor((canvas.width * canvas.height) / 15000);
     for (let i = 0; i < count; i++) {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+        x: Math.random() * width,
+        y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.3,
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
@@ -156,20 +268,19 @@ function initParticles() {
   }
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, width, height);
 
     particles.forEach(p => {
       p.x += p.vx;
       p.y += p.vy;
 
-      if (p.x < 0) p.x = canvas.width;
-      if (p.x > canvas.width) p.x = 0;
-      if (p.y < 0) p.y = canvas.height;
-      if (p.y > canvas.height) p.y = 0;
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      const dotColor = getComputedStyle(document.documentElement).getPropertyValue('--particle-dot').trim();
       ctx.fillStyle = `rgba(${dotColor}, ${p.opacity})`;
       ctx.fill();
     });
@@ -185,7 +296,6 @@ function initParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--particle-line').trim();
           ctx.strokeStyle = `rgba(${lineColor}, ${0.12 * (1 - dist / 120)})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
@@ -196,13 +306,46 @@ function initParticles() {
     animationId = requestAnimationFrame(draw);
   }
 
+  function start() {
+    if (animationId === null) animationId = requestAnimationFrame(draw);
+  }
+
+  function stop() {
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  readColors();
   resize();
   createParticles();
-  draw();
+  start();
 
   window.addEventListener('resize', () => {
+    /* On a phone, scrolling hides and shows the address bar, and every time it
+       moves the browser reports a resize. Rebuilding the particles on each one
+       made the hero flicker, so only a real change of width counts. */
+    const sameWidth = Math.abs(canvas.offsetWidth - width) < 2;
     resize();
-    createParticles();
+    if (!sameWidth) createParticles();
+  });
+
+  // Nothing to animate while the hero is off screen or the tab is in the back.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else start();
+  });
+
+  new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) start();
+    else stop();
+  }).observe(canvas);
+
+  // The theme toggle swaps the colours underneath us.
+  new MutationObserver(readColors).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
   });
 }
 

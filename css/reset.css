@@ -12,6 +12,7 @@ html {
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -20,6 +21,15 @@ body {
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
+}
+
+/* Las imágenes llevan su tamaño escrito en la etiqueta para que el navegador
+   reserve el hueco antes de que lleguen y la página no pegue tirones. Ese
+   tamaño manda también sobre el alto, así que hay que devolvérselo al ancho:
+   si no, la foto sale estirada. Quien necesite otra cosa lo dice en su
+   propia regla, que es más concreta y gana. */
+img {
+  height: auto;
 }
 
 input, button, textarea, select {

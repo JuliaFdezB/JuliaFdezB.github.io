@@ -103,7 +103,9 @@ function openProjectModal(projectId) {
     video.autoplay = false;
     video.style.width = '100%';
     video.style.height = '100%';
-    video.style.objectFit = 'cover';
+    // 'contain' y no 'cover': recortar un vídeo le corta la imagen por
+    // arriba y por abajo, y en una pantalla estrecha se pierde media escena.
+    video.style.objectFit = 'contain';
     if (carouselContent) carouselContent.replaceWith(video);
     carouselPrev.style.display = 'none';
     carouselNext.style.display = 'none';
@@ -163,8 +165,10 @@ function openProjectModal(projectId) {
     .map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="btn btn--outline">${l.label}</a>`)
     .join('');
 
-  modalOverlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  if (!modalOverlay.classList.contains('active')) {
+    modalOverlay.classList.add('active');
+    window.freezeBackground(true);
+  }
 }
 
 function updateCarouselImage() {
@@ -182,12 +186,13 @@ function updateCarouselImage() {
 }
 
 function closeModal() {
+  if (!modalOverlay.classList.contains('active')) return;
   const video = modalCarousel.querySelector('video');
   if (video) video.pause();
   const iframe = modalCarousel.querySelector('iframe');
   if (iframe) iframe.src = '';
   modalOverlay.classList.remove('active');
-  document.body.style.overflow = '';
+  window.freezeBackground(false);
 }
 
 modalClose.addEventListener('click', closeModal);
@@ -207,10 +212,56 @@ carouselNext.addEventListener('click', () => {
   updateCarouselImage();
 });
 
+/* ========================================
+   Swiping through images
+
+   Shared by the project carousel and the enlarged artwork. A swipe only
+   counts when it is clearly sideways and long enough, so that scrolling the
+   page with the finger never changes the picture by accident.
+   ======================================== */
+function onSwipe(element, onLeft, onRight) {
+  const MIN = 45;
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  element.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  element.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+
+    if (Math.abs(dx) < MIN || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) onLeft();
+    else onRight();
+  }, { passive: true });
+}
+
+onSwipe(modalCarousel, () => carouselNext.click(), () => carouselPrev.click());
+
 // Open modal on card click
 document.querySelectorAll('.project-card').forEach(card => {
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+
   card.addEventListener('click', () => {
     openProjectModal(card.dataset.project);
+  });
+
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openProjectModal(card.dataset.project);
+    }
   });
 });
 
@@ -234,17 +285,17 @@ const lightboxImg = lightboxOverlay?.querySelector('img');
 const lightboxClose = lightboxOverlay?.querySelector('.lightbox-close');
 
 function openLightbox(src, alt) {
-  if (!lightboxOverlay) return;
+  if (!lightboxOverlay || lightboxOverlay.classList.contains('active')) return;
   lightboxImg.src = src;
   lightboxImg.alt = alt || 'Artwork';
   lightboxOverlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  window.freezeBackground(true);
 }
 
 function closeLightbox() {
-  if (!lightboxOverlay) return;
+  if (!lightboxOverlay || !lightboxOverlay.classList.contains('active')) return;
   lightboxOverlay.classList.remove('active');
-  document.body.style.overflow = '';
+  window.freezeBackground(false);
 }
 
 lightboxClose?.addEventListener('click', closeLightbox);
@@ -253,9 +304,22 @@ lightboxOverlay?.addEventListener('click', (e) => {
 });
 
 document.querySelectorAll('.gallery__item').forEach(item => {
-  item.addEventListener('click', () => {
+  item.setAttribute('role', 'button');
+  item.setAttribute('tabindex', '0');
+
+  const abrir = (e) => {
+    if (e.target.closest('a')) return;
     const img = item.querySelector('img');
     if (img) openLightbox(img.src, img.alt);
+  };
+
+  item.addEventListener('click', abrir);
+
+  item.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      abrir(e);
+    }
   });
 });
 
@@ -275,13 +339,15 @@ const cvFiles = {
 };
 
 document.getElementById('view-cv-btn').addEventListener('click', () => {
+  if (cvOverlay.classList.contains('active')) return;
   cvOverlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  window.freezeBackground(true);
 });
 
 function closeCvModal() {
+  if (!cvOverlay.classList.contains('active')) return;
   cvOverlay.classList.remove('active');
-  document.body.style.overflow = '';
+  window.freezeBackground(false);
 }
 
 cvCloseBtn.addEventListener('click', closeCvModal);

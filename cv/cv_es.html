@@ -139,6 +139,52 @@
 
   .award { font-size: 7.5pt; color: #0F172A; font-weight: 500; margin-top: 0.5mm; }
   .award::before { content: "\2605  "; color: #F59E0B; }
+
+  /* ── Narrow screens ──
+     The sheet is 210 mm wide, which does not fit on a phone: it ends up cut
+     off and you have to drag it sideways to read it. Here it stops being a
+     sheet of paper — it takes whatever width there is, the dark column sits
+     above the text instead of beside it, and the smallest type grows, since
+     sizes meant for print come out tiny on a screen.
+     Printing is untouched: this only applies to @media screen. */
+  @media screen and (max-width: 820px) {
+    body { background: #fff; }
+
+    .page {
+      width: 100%;
+      min-height: 0;
+      margin: 0;
+      box-shadow: none;
+      grid-template-columns: 1fr;
+    }
+
+    /* Puestos uno debajo de otro, lo primero debe ser de quién es el
+       currículum, no la columna de contacto. */
+    .main { order: -1; }
+
+    .sidebar { padding: 7mm 6mm; }
+    .main { padding: 7mm 6mm 10mm; }
+
+    .sb-heading { font-size: 8.5pt; }
+    .contact-label { font-size: 7.5pt; }
+    .contact-value { font-size: 9.5pt; word-break: break-word; }
+    .skill-group-title { font-size: 9pt; }
+    .tag { font-size: 8.5pt; }
+    .lang-name { font-size: 9.5pt; }
+    .lang-detail { font-size: 8.5pt; }
+    .avail { font-size: 9pt; }
+
+    .name { font-size: 22pt; }
+    .subtitle { font-size: 12pt; }
+    .profile { font-size: 9.5pt; }
+    .section-title { font-size: 10.5pt; }
+    .entry-title { font-size: 10.5pt; }
+    .entry-date { font-size: 8.5pt; }
+    .entry-sub { font-size: 9.5pt; }
+    .entry-meta { font-size: 8.5pt; }
+    .entry-desc { font-size: 9.5pt; }
+    .award { font-size: 9.5pt; }
+  }
 </style>
 </head>
 <body>

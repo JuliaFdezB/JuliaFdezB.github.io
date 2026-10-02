@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Julia Fernández — Game Developer & Artist</title>
   <meta name="description" content="Portfolio of Julia Fernández — Videogames Design & Development graduate from UJI. Game developer and artist showcasing games, art, and code.">
 
@@ -11,6 +11,9 @@
   <meta property="og:description" content="Game developer and artist. Videogames Design & Development graduate from UJI.">
   <meta property="og:type" content="website">
 
+  <!-- Para que la barra del navegador en el móvil no desentone con la web -->
+  <meta name="theme-color" content="#0e0a16">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +21,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
 
   <!-- Favicon -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -29,19 +32,23 @@
   <nav class="nav">
     <div class="container">
       <a href="#hero" class="nav__logo">JF</a>
-      <ul class="nav__links">
+      <ul class="nav__links" id="nav-links">
         <li><a href="#about" class="nav__link">About</a></li>
         <li><a href="#projects" class="nav__link">Projects</a></li>
         <li><a href="#art" class="nav__link">Art</a></li>
         <li><a href="#contact" class="nav__link">Contact</a></li>
       </ul>
-      <button class="nav__hamburger" aria-label="Toggle menu">
+      <button class="nav__hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
   </nav>
+
+  <!-- Velo del menú del móvil: recoge el toque que lo cierra para que no
+       llegue a lo que hay detrás. -->
+  <div class="nav__backdrop" hidden></div>
 
   <!-- ======== HERO ======== -->
   <section id="hero" class="hero">
@@ -67,7 +74,7 @@
       </div>
       <div class="about__grid reveal">
         <div class="about__image-wrapper">
-          <img src="assets/images/profile/Foto_perfil.jpg" alt="Julia Fernández" class="about__image">
+          <img width="500" height="500" src="assets/images/profile/Foto_perfil.jpg" alt="Julia Fernández" class="about__image">
         </div>
         <div class="about__text">
           <p>I'm a <strong>Videogames Design and Development</strong> graduate from <strong>Universitat Jaume I</strong> (Castellón, Spain), passionate about creating interactive experiences that blend compelling art with solid engineering.</p>
@@ -138,9 +145,9 @@
         <!-- Ptolemy's Night -->
         <article class="project-card reveal" data-project="ptolemys-night" data-category="game">
           <div class="project-card__thumbnail">
-            <img src="assets/images/projects/PN-PortadaWeb.jpg" alt="Ptolemy's Night" loading="lazy">
+            <img width="1200" height="675" src="assets/images/projects/PN-PortadaWeb.jpg" alt="Ptolemy's Night" loading="lazy">
             <div class="project-card__overlay">
-              <p class="project-card__overlay-text">Click to see details</p>
+              <p class="project-card__overlay-text">View details</p>
             </div>
           </div>
           <div class="project-card__info">
@@ -157,9 +164,9 @@
         <!-- Heredero del Oficio -->
         <article class="project-card reveal" data-project="heredero-del-oficio" data-category="game">
           <div class="project-card__thumbnail">
-            <img src="assets/images/projects/PortadaJuegoItchHDO.jpg" alt="Heredero del Oficio" loading="lazy">
+            <img width="1200" height="675" src="assets/images/projects/PortadaJuegoItchHDO.jpg" alt="Heredero del Oficio" loading="lazy">
             <div class="project-card__overlay">
-              <p class="project-card__overlay-text">Click to see details</p>
+              <p class="project-card__overlay-text">View details</p>
             </div>
           </div>
           <div class="project-card__info">
@@ -176,9 +183,9 @@
         <!-- Under the Influence -->
         <article class="project-card reveal" data-project="under-the-influence" data-category="design">
           <div class="project-card__thumbnail">
-            <img src="assets/images/projects/Under the influence.jpg" alt="Under the Influence" loading="lazy">
+            <img width="1200" height="675" src="assets/images/projects/Under the influence.jpg" alt="Under the Influence" loading="lazy">
             <div class="project-card__overlay">
-              <p class="project-card__overlay-text">Click to see details</p>
+              <p class="project-card__overlay-text">View details</p>
             </div>
           </div>
           <div class="project-card__info">
@@ -194,9 +201,9 @@
         <!-- Wool & Thread -->
         <article class="project-card reveal" data-project="wool-and-thread" data-category="design">
           <div class="project-card__thumbnail">
-            <img src="assets/images/projects/Wool & Thread.jpg" alt="Wool & Thread" loading="lazy">
+            <img width="1200" height="675" src="assets/images/projects/Wool & Thread.jpg" alt="Wool & Thread" loading="lazy">
             <div class="project-card__overlay">
-              <p class="project-card__overlay-text">Click to see details</p>
+              <p class="project-card__overlay-text">View details</p>
             </div>
           </div>
           <div class="project-card__info">
@@ -224,7 +231,7 @@
         <!-- HDO Stack -->
         <div class="gallery__stack">
           <div class="gallery__item">
-            <img src="assets/images/art/HDO1.jpg" alt="HDO 1" loading="lazy">
+            <img width="1200" height="1697" src="assets/images/art/HDO1.jpg" alt="HDO 1" loading="lazy">
             <div class="gallery__item__overlay gallery__item__overlay--linked">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
               <a href="assets/docs/Heredero del oficio trabajo individual_FernandezBermejoJulia.pdf" target="_blank" rel="noopener" class="gallery__item__link">
@@ -235,7 +242,7 @@
           </div>
           <div class="gallery__stack-hidden">
             <div class="gallery__item">
-              <img src="assets/images/art/HDO2.jpg" alt="HDO 2" loading="lazy">
+              <img width="1200" height="1697" src="assets/images/art/HDO2.jpg" alt="HDO 2" loading="lazy">
               <div class="gallery__item__overlay gallery__item__overlay--linked">
                 <a href="assets/docs/Heredero del oficio trabajo individual_FernandezBermejoJulia.pdf" target="_blank" rel="noopener" class="gallery__item__link">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -244,7 +251,7 @@
               </div>
             </div>
             <div class="gallery__item">
-              <img src="assets/images/art/HDO3.jpg" alt="HDO 3" loading="lazy">
+              <img width="1200" height="1697" src="assets/images/art/HDO3.jpg" alt="HDO 3" loading="lazy">
               <div class="gallery__item__overlay gallery__item__overlay--linked">
                 <a href="assets/docs/Heredero del oficio trabajo individual_FernandezBermejoJulia.pdf" target="_blank" rel="noopener" class="gallery__item__link">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -258,14 +265,14 @@
         <!-- Ajolote Stack -->
         <div class="gallery__stack">
           <div class="gallery__item">
-            <img src="assets/images/art/Ajolote1.jpg" alt="Ajolote 1" loading="lazy">
+            <img width="1200" height="1587" src="assets/images/art/Ajolote1.jpg" alt="Ajolote 1" loading="lazy">
             <div class="gallery__item__overlay">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
             </div>
           </div>
           <div class="gallery__stack-hidden">
             <div class="gallery__item">
-              <img src="assets/images/art/Ajolote2.jpg" alt="Ajolote 2" loading="lazy">
+              <img width="1200" height="1593" src="assets/images/art/Ajolote2.jpg" alt="Ajolote 2" loading="lazy">
               <div class="gallery__item__overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
               </div>
@@ -274,14 +281,14 @@
         </div>
 
         <div class="gallery__item">
-          <img src="assets/images/art/Pegatinas.jpg" alt="Pegatinas" loading="lazy">
+          <img width="1200" height="1703" src="assets/images/art/Pegatinas.jpg" alt="Pegatinas" loading="lazy">
           <div class="gallery__item__overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </div>
         </div>
 
         <div class="gallery__item">
-          <img src="assets/images/art/Portada Sparkle like you mean it!.jpg" alt="Portada Sparkle like you mean it!" loading="lazy">
+          <img width="1200" height="675" src="assets/images/art/Portada Sparkle like you mean it!.jpg" alt="Portada Sparkle like you mean it!" loading="lazy">
           <div class="gallery__item__overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </div>
@@ -304,7 +311,7 @@
           <p>I'm currently open to opportunities in game development — whether it's a studio position, freelance work, or an exciting indie project. If you'd like to collaborate or just say hello, feel free to reach out!</p>
           <div class="contact__socials">
             <a href="https://julia-fdez.itch.io/" target="_blank" rel="noopener" class="contact__social-btn">
-              <img src="assets/images/icons/icons8-itch.io-24.jpg" alt="itch.io" width="20" height="20" style="display:inline;">
+              <img src="assets/images/icons/icons8-itch.io-96.png" alt="itch.io" width="20" height="20" style="display:inline;">
               itch.io
             </a>
             <a href="https://linkedin.com/in/julia-fernandez-bermejo-a28805402" target="_blank" rel="noopener" class="contact__social-btn">
@@ -413,7 +420,7 @@
   </button>
 
   <!-- Scripts -->
-  <script src="js/main.js?v=3" defer></script>
-  <script src="js/modal.js?v=3" defer></script>
+  <script src="js/main.js?v=5" defer></script>
+  <script src="js/modal.js?v=5" defer></script>
 </body>
 </html>
