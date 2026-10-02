@@ -4,7 +4,7 @@
 const projectsData = {
   'ptolemys-night': {
     title: 'Ptolemy\'s Night',
-    images: ['assets/images/projects/PtolemysNight.jpg'],
+    images: ['assets/images/projects/PN-PortadaWeb.jpg'],
     video: 'https://www.youtube.com/embed/fnKnYpNfvLI',
     role: 'Research, Design & Development',
     team: 'Solo',
