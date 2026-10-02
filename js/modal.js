@@ -2,6 +2,21 @@
    Project Data
    ======================================== */
 const projectsData = {
+  'ptolemys-night': {
+    title: 'Ptolemy\'s Night',
+    images: ['assets/images/projects/PtolemysNight.jpg'],
+    video: 'https://www.youtube.com/embed/fnKnYpNfvLI',
+    role: 'Research, Design & Development',
+    team: 'Solo',
+    duration: '5 months',
+    language: 'English',
+    tech: ['Unity 6', 'C#', 'Claude Code', 'Blender'],
+    description: 'My Final Degree Work: a puzzle game that is also a study of how artificial intelligence is changing the way games get made. You play as the spirit of Cassiopeia, arranging the room of the 2nd-century astronomer Claudius Ptolemy so that he discovers and documents her constellation on his own during the night — he is an autonomous NPC driven by a custom checkpoint-based decision tree, which keeps the puzzle solvable and verifiable from a known starting state. I ran the research from inside the project: four development scenarios, each modelling a different studio team, from AI as a supporting tool with me leading the work to progressively heavier AI roles. For each one I recorded the time invested, the state of the resulting build and every human intervention it needed, then compared them to answer how AI can be used efficiently and how much the human still matters. Built in Unity 6 over five months, entirely on my own.',
+    links: [
+      { label: 'Play on itch.io', url: 'https://julia-fdez.itch.io/ptolemys-night', icon: 'itchio' },
+      { label: 'Read the Final Degree Work', url: 'https://drive.google.com/file/d/1UQcQt2FAG5qjipO-6Pk72iDTAIvrV0iw/view?usp=sharing', icon: 'doc' }
+    ]
+  },
   'heredero-del-oficio': {
     title: 'Heredero del Oficio',
     images: ['assets/images/projects/PortadaJuegoItchHDO.jpg'],
