@@ -1451,38 +1451,108 @@ body {
 }
 
 /* ----------------------------------------
-   La galería
+   La galería donde no hay abanico
 
-   Las pilas de fotos se abrían al pasar el ratón por encima, desplegándose
-   hacia la derecha sobre las columnas vecinas. Con el dedo no hay "pasar
-   por encima", así que las fotos de debajo —HDO 2 y 3, Ajolote 2— no había
-   manera de verlas; y con menos de tres columnas el despliegue se salía de
-   la pantalla.
+   Las pilas de fotos se abren al pasar el ratón por encima, desplegándose
+   hacia la derecha sobre las columnas vecinas. Eso se queda tal cual en el
+   ordenador y no se toca nada de ello.
 
-   Donde no hay ratón, o no caben tres columnas, se deshace la pila y las
-   fotos entran en la rejilla como una más. Se ven todas y no se sale nada.
+   El problema es dónde NO ocurre. Con el dedo no hay "pasar por encima", así
+   que las fotos de debajo —HDO 2 y 3, Ajolote 2— no había manera de verlas; y
+   con menos de tres columnas el despliegue se salía de la pantalla. Y ojo,
+   porque esto pasa más de lo que parece: el modo de dispositivos del
+   navegador, los portátiles con pantalla táctil y las tabletas declaran todos
+   que no hay ratón, aunque la pantalla sea ancha.
+
+   Ahí el grupo no se deshace: se convierte en una fila que se desliza hacia
+   la derecha. Las fotos siguen juntas, se llega a todas, y la siguiente asoma
+   por el borde para que se vea que hay más.
+
+   Se desliza con el scroll de verdad del navegador, no moviendo las fotos con
+   JavaScript, y eso decide dos cosas solas: al tabular hasta una foto que
+   está fuera de la vista el navegador trae la fila él mismo, y arrastrar no
+   abre la foto, porque es él quien distingue el toque del arrastre y, si fue
+   arrastre, no genera clic.
    ---------------------------------------- */
 @media (hover: none), (max-width: 1024px) {
-  .gallery__stack,
+  /* Un grupo por fila. */
+  .gallery__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery__stack {
+    display: flex;
+    gap: var(--gap);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    /* El aro del foco se pinta por fuera de la foto, y un contenedor con
+       scroll recorta a su borde: sin este hueco, se vería cortado. */
+    padding-block: 4px;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+  }
+
+  /* Esto es lo que mete las fotos escondidas en la fila como una más. */
   .gallery__stack-hidden {
     display: contents;
   }
 
-  .gallery__stack-hidden .gallery__item {
+  /* Las tres clases hacen falta de verdad: la regla de arriba que las esconde
+     (.gallery__stack-hidden .gallery__item) pesa lo mismo con solo dos, y en
+     caso de empate gana la que viene antes en el archivo. Con dos clases esto
+     no haría nada en absoluto. */
+  .gallery__stack .gallery__stack-hidden .gallery__item,
+  .gallery__stack > .gallery__item {
     position: static;
+    flex: 0 0 min(86%, 420px);
     opacity: 1;
     transform: none;
     transition: none;
     pointer-events: auto;
+    scroll-snap-align: start;
   }
 
-  /* El distintivo de "aquí hay más fotos" ya no significa nada. */
+  /* Con ratón por debajo de 1025 px el guión sigue marcando el grupo como
+     desplegado, y su desplazamiento lateral desmontaría la fila entera. */
+  .gallery__stack.expanded .gallery__stack-hidden .gallery__item:nth-child(1),
+  .gallery__stack.expanded .gallery__stack-hidden .gallery__item:nth-child(2) {
+    transform: none;
+  }
+
+  /* Las fotos que no son de ningún grupo no tienen nada que deslizar, pero
+     sí deben medir lo mismo que las demás: con la rejilla en una sola
+     columna ocupaban el ancho entero y salían al triple de grandes que las
+     de los grupos, comiéndose la sección entera. La misma medida que ellas,
+     y centradas. */
+  .gallery__grid > .gallery__item {
+    width: min(86%, 420px);
+    margin-inline: auto;
+  }
+
+  /* El distintivo de "aquí hay más fotos" ya no significa nada: se ven. */
   .gallery__stack > .gallery__item::after {
     display: none;
   }
 }
 
 @media (hover: none) {
+  /* Con el dedo se arrastra la fila directamente, así que la barra solo
+     ocupa sitio. Se esconde aquí y no en el bloque de arriba a propósito:
+     entre 769 y 1024 px con ratón, la barra es la única forma de mover la
+     fila —ahí no hay dedo, la rueda vertical no mueve algo horizontal y no
+     hay flechas—, y esconderla dejaría a esa persona sin salida. */
+  .gallery__stack {
+    scrollbar-width: none;
+  }
+
+  .gallery__stack::-webkit-scrollbar {
+    display: none;
+  }
+
   /* El botón del art book solo aparecía al pasar el ratón: sin ratón, se
      deja siempre a la vista y se quita el velo oscuro, que ahí ya no pinta
      nada. */

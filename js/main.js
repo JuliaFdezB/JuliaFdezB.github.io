@@ -146,40 +146,23 @@ projectFilterBtns.forEach(btn => {
 });
 
 /* ========================================
-   Gallery Filters
-   ======================================== */
-const galleryFilterBtns = document.querySelectorAll('.gallery__filters .filter-btn');
-const galleryItems = document.querySelectorAll('.gallery__item');
-
-galleryFilterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-
-    galleryFilterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    galleryItems.forEach(item => {
-      if (filter === 'all' || item.dataset.category === filter) {
-        item.classList.remove('hidden');
-      } else {
-        item.classList.add('hidden');
-      }
-    });
-  });
-});
-
-/* ========================================
    Gallery Stacks — delayed collapse
+
+   The fan-out only belongs where there is a mouse and room for three columns.
+   Everywhere else the CSS turns the group into a strip you drag sideways, and
+   a stray 'expanded' would pull that strip apart.
+
+   The condition is the same one the stylesheet uses, written once here so the
+   two cannot drift apart, and it is read on every hover rather than at load:
+   resizing the window switches behaviour without a reload.
    ======================================== */
-/* Sin ratón las pilas no se despliegan: el CSS las deshace y enseña todas
-   las fotos en la rejilla, porque si no las de debajo quedan inalcanzables. */
-const hasHover = window.matchMedia('(hover: hover)').matches;
+const fanOut = window.matchMedia('(hover: hover) and (min-width: 1025px)');
 
 document.querySelectorAll('.gallery__stack').forEach(stack => {
-  if (!hasHover) return;
   let closeTimer = null;
 
   stack.addEventListener('mouseenter', () => {
+    if (!fanOut.matches) return;
     clearTimeout(closeTimer);
     stack.classList.add('expanded');
   });
@@ -189,6 +172,14 @@ document.querySelectorAll('.gallery__stack').forEach(stack => {
       stack.classList.remove('expanded');
     }, 200);
   });
+});
+
+/* Leaving fan-out territory mid-hover: no mouse is going to leave a group
+   that has stopped answering to the mouse, so the class would stay stuck. */
+fanOut.addEventListener('change', () => {
+  if (fanOut.matches) return;
+  document.querySelectorAll('.gallery__stack.expanded')
+    .forEach(stack => stack.classList.remove('expanded'));
 });
 
 /* ========================================
