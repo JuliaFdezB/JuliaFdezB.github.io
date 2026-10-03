@@ -1483,6 +1483,9 @@ body {
   .gallery__stack {
     display: flex;
     gap: var(--gap);
+    /* Por lo mismo que el texto del proyecto: sin esto la fila se ensancha
+       hasta caber entera en vez de recortarse y dejar que se deslice. */
+    min-width: 0;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -1508,7 +1511,15 @@ body {
   .gallery__stack .gallery__stack-hidden .gallery__item,
   .gallery__stack > .gallery__item {
     position: static;
-    flex: 0 0 min(86%, 420px);
+    /* En tres líneas y no en la forma abreviada "flex: 0 0 min(...)":
+       Safari ha tenido problemas con las funciones de cálculo ahí dentro, y
+       si no entiende la línea la descarta entera —las fotos se encogerían
+       para caber y no quedaría nada que deslizar—. Así, como mucho falla
+       una de las tres. */
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: min(86%, 420px);
+    min-width: 0;
     opacity: 1;
     transform: none;
     transition: none;
@@ -1608,6 +1619,11 @@ body {
   /* El texto es lo que se desliza, no la ventana entera. */
   .modal__body {
     flex: 1;
+    /* Sin esto no hay nada que deslizar: una caja flexible se niega a
+       encogerse por debajo de su contenido mientras no se le diga, así que
+       el texto crece entero y lo recorta la ventana en vez de poder bajarlo.
+       Chrome lo perdona, la norma no. */
+    min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
