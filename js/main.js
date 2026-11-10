@@ -57,11 +57,15 @@ const navBackdrop = document.querySelector('.nav__backdrop');
 
 // Scroll effect
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 50);
+  nav?.classList.toggle('scrolled', window.scrollY > 50);
 });
 
 // Hamburger menu
+/* Páginas como el artbook traen la barra pero no todo lo demás: sin esta
+   salida, el guión se rompía aquí y se llevaba por delante lo que viene
+   después, la galería incluida. */
 function setMenu(open) {
+  if (!navLinks || !hamburger) return;
   if (navLinks.classList.contains('open') === open) return;
   hamburger.classList.toggle('active', open);
   navLinks.classList.toggle('open', open);
@@ -81,7 +85,7 @@ function setMenu(open) {
   }
 }
 
-hamburger.addEventListener('click', () => {
+hamburger?.addEventListener('click', () => {
   setMenu(!navLinks.classList.contains('open'));
 });
 
@@ -352,7 +356,7 @@ if (contactForm) {
     const btn = contactForm.querySelector('.btn');
     const originalText = btn.innerHTML;
 
-    btn.innerHTML = 'Sending...';
+    btn.innerHTML = document.documentElement.lang === 'es' ? 'Enviando…' : 'Sending...';
     btn.disabled = true;
 
     try {
@@ -363,14 +367,14 @@ if (contactForm) {
       });
 
       if (response.ok) {
-        btn.innerHTML = 'Sent!';
+        btn.innerHTML = document.documentElement.lang === 'es' ? '¡Enviado!' : 'Sent!';
         contactForm.reset();
         setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 3000);
       } else {
         throw new Error('Form submission failed');
       }
     } catch {
-      btn.innerHTML = 'Error — try again';
+      btn.innerHTML = document.documentElement.lang === 'es' ? 'Error, inténtalo otra vez' : 'Error — try again';
       btn.disabled = false;
       setTimeout(() => { btn.innerHTML = originalText; }, 3000);
     }

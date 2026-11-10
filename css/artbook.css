@@ -1,0 +1,633 @@
+/* ========================================
+   Artbook — Out of Sight
+
+   Hoja propia de la página del artbook. Se carga después de style.css y
+   depende de sus variables: aquí no hay ni un color escrito a mano.
+   ======================================== */
+
+/* ----------------------------------------
+   Pixel art
+
+   Las piezas miden dieciséis píxeles de lado y pesan menos de un kilobyte.
+   No se reescalan en disco: se sirven tal cual y se agrandan aquí, con el
+   navegador obligado a repetir el píxel en vez de difuminarlo. Cada lámina
+   dice en su marca cuántos píxeles de ancho tiene (--w) y por cuánto se
+   multiplica (--k), de manera que el aumento sea siempre un número entero y
+   ningún píxel salga de distinto tamaño que su vecino.
+   ---------------------------------------- */
+.px {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: calc(var(--w, 16) * var(--k, 8) * 1px);
+  max-width: 100%;
+  height: auto;
+}
+
+/* ----------------------------------------
+   La portada a oscuras
+
+   El juego abre con la pantalla casi vacía y hay que pulsar la bombilla para
+   que aparezcan los botones. Esta página hace lo mismo — y lo avisa primero,
+   porque a oscuras y sin avisar lo que parece es que está rota.
+   ---------------------------------------- */
+.ab-cover {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 3rem);
+  padding: 7rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Un halo que solo existe cuando la farola está encendida. */
+.ab-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 50% at 50% 45%, var(--accent-glow), transparent 70%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.ab.is-lit .ab-cover::after {
+  opacity: 0.5;
+}
+
+/* El aviso. Es lo primero que se lee y lo único que se ve con claridad
+   mientras todo lo demás sigue apagado. */
+.ab-cover__instruction {
+  max-width: 34rem;
+  font-size: clamp(1rem, 2.4vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.ab-cover__instruction strong {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-heading);
+  color: var(--accent-secondary);
+}
+
+.ab.is-lit .ab-cover__instruction {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.ab-cover__scene {
+  display: flex;
+  justify-content: center;
+}
+
+.ab-bulb {
+  position: relative;
+  display: block;
+  width: calc(160 * 3px);
+  max-width: 90vw;
+  aspect-ratio: 160 / 80;
+  border-radius: var(--radius-md);
+  transition: transform var(--transition-medium);
+}
+
+.ab-bulb:hover {
+  transform: scale(1.03);
+}
+
+.ab-bulb:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 8px;
+}
+
+.ab-bulb__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.ab-bulb__img--off { opacity: 1; }
+
+/* Un anillo latiendo sobre la bombilla, por si el aviso no bastara: señala
+   dónde hay que pulsar, no solo que hay que hacerlo. */
+.ab-bulb__ring {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  width: 11%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border: 2px solid var(--accent-secondary);
+  border-radius: 50%;
+  animation: ab-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ab-ring {
+  0% { opacity: 0.9; transform: translateX(-50%) scale(1); }
+  70% { opacity: 0; transform: translateX(-50%) scale(2.6); }
+  100% { opacity: 0; transform: translateX(-50%) scale(2.6); }
+}
+
+/* El titileo: el fotograma intermedio aparece a saltos, como una bombilla
+   que no termina de arrancar. */
+.ab.is-dark .ab-bulb__img--flicker {
+  animation: ab-flicker 2.4s steps(1, end) infinite;
+}
+
+@keyframes ab-flicker {
+  0%, 56%, 62%, 70%, 100% { opacity: 0; }
+  58%, 66% { opacity: 1; }
+}
+
+.ab.is-lit .ab-bulb__img--off,
+.ab.is-lit .ab-bulb__img--flicker { opacity: 0; animation: none; }
+.ab.is-lit .ab-bulb__img--on { opacity: 1; }
+.ab.is-lit .ab-bulb__ring { display: none; }
+.ab.is-lit .ab-bulb { cursor: default; }
+
+.ab-cover__text {
+  max-width: 40rem;
+}
+
+.ab-cover__eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  transition: color 1s ease;
+}
+
+.ab-cover__title {
+  font-size: clamp(2.5rem, 9vw, 5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: color 1s ease, text-shadow 1s ease;
+}
+
+.ab.is-lit .ab-cover__eyebrow { color: var(--accent-secondary); }
+
+.ab.is-lit .ab-cover__title {
+  color: var(--text-primary);
+  text-shadow: 0 0 40px var(--accent-glow);
+}
+
+.ab-cover__meta,
+.ab-cover__byline {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  transition: color 1s ease;
+}
+
+.ab.is-lit .ab-cover__meta,
+.ab.is-lit .ab-cover__byline { color: var(--text-secondary); }
+
+.ab-cover__skip {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.ab-cover__skip:hover {
+  color: var(--text-secondary);
+  border-bottom-color: var(--text-muted);
+}
+
+/* Mientras no se encienda la luz, el libro se intuye y poco más. */
+.ab-main {
+  opacity: 0.08;
+  filter: saturate(0.2);
+  transition: opacity 1.4s ease, filter 1.4s ease;
+}
+
+.ab.is-lit .ab-main {
+  opacity: 1;
+  filter: none;
+}
+
+/* ----------------------------------------
+   Capítulos
+   ---------------------------------------- */
+.ab-chapter {
+  padding-block: var(--section-padding);
+}
+
+.ab-chapter--alt {
+  background: var(--bg-secondary);
+}
+
+/* Una línea por capítulo. Esto es un artbook: lo que hay que mirar son las
+   imágenes, y el texto solo tiene que decir qué se está mirando. */
+.ab-line {
+  max-width: 40rem;
+  margin: 2.5rem auto;
+  text-align: center;
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  color: var(--text-secondary);
+}
+
+/* ----------------------------------------
+   Capturas del juego
+
+   Fotogramas del propio juego, que es donde todas estas piezas acaban. Van
+   a sangre y mandan sobre el resto del capítulo.
+   ---------------------------------------- */
+.ab-shot {
+  margin-block: 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.ab-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ----------------------------------------
+   Láminas
+   ---------------------------------------- */
+.ab-plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ab-plate__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 9rem;
+  padding: 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.ab-plate__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.ab-plate__file {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* Lo único que queda bajo una lámina: qué es lo que se está mirando. Ni
+   nombres de archivo ni medidas — eso es contabilidad, no un artbook. */
+.ab-plate__label {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-secondary);
+}
+
+.ab-plate--step .ab-plate__frame {
+  min-height: 22rem;
+  align-items: flex-end;
+}
+
+.ab-plate--result .ab-plate__frame {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.ab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.ab-grid--two {
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+}
+
+/* ----------------------------------------
+   La farola, sumada
+
+   Las tres capas y el resultado, con los signos entre medias. Es la lámina
+   que explica cómo está hecha una farola encendida sin decir una palabra.
+   ---------------------------------------- */
+.ab-stack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 2rem;
+}
+
+.ab-stack .ab-plate {
+  flex: 0 1 13rem;
+}
+
+.ab-stack__op {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+}
+
+.ab-stack__op--eq {
+  color: var(--accent-primary);
+}
+
+/* ----------------------------------------
+   Comparador claro / oscuro
+
+   La mecánica del juego, convertida en el mando del libro.
+   ---------------------------------------- */
+.ab-compare {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.ab-compare__img {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s ease;
+}
+
+.ab-compare__img--b { opacity: 0; }
+
+.ab-compare.is-b .ab-compare__img--a { opacity: 0; }
+.ab-compare.is-b .ab-compare__img--b { opacity: 1; }
+
+.ab-compare__btn { cursor: pointer; }
+.ab-compare__label--b { display: none; }
+.ab-compare__btn.is-b .ab-compare__label--a { display: none; }
+.ab-compare__btn.is-b .ab-compare__label--b { display: inline; }
+
+/* ----------------------------------------
+   Animación por fotogramas
+
+   La hoja de los ojos lleva sus dos dibujos uno encima de otro, así que el
+   corte es horizontal y el salto va en vertical. Sin intermedios: entre dos
+   dibujos de cuatro píxeles de alto no hay nada que interpolar.
+   ---------------------------------------- */
+.ab-sprite {
+  position: relative;
+  width: calc(var(--w) * var(--k) * 1px);
+  height: calc(var(--h) * var(--k) * 1px);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ab-sprite img {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: calc(var(--w) * var(--k) * 1px);
+  height: calc(var(--h) * var(--n) * var(--k) * 1px);
+  max-width: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  animation: ab-sprite-play var(--dur, 1s) steps(var(--n)) infinite;
+}
+
+@keyframes ab-sprite-play {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(var(--h) * var(--n) * var(--k) * -1px)); }
+}
+
+
+/* ----------------------------------------
+   Capturas en pareja
+
+   Dos estados de la misma pantalla, uno al lado del otro.
+   ---------------------------------------- */
+.ab-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--gap);
+  margin-block: 2rem;
+}
+
+.ab-shots .ab-shot {
+  margin-block: 0;
+}
+
+.ab-shot figcaption {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+/* ----------------------------------------
+   Los botones, estado por estado
+
+   Una columna por botón y una fila por estado, que es como se comparan.
+   ---------------------------------------- */
+.ab-states {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.5rem;
+  align-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-states__col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ab-states__col .px {
+  width: 100%;
+  max-width: 15rem;
+}
+
+.ab-states__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+/* ----------------------------------------
+   El resto de piezas
+
+   Sin explicación: una hoja de muestras y ya.
+   ---------------------------------------- */
+.ab-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 1rem;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-sheet figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9rem;
+}
+
+/* ----------------------------------------
+   Cierre
+   ---------------------------------------- */
+.ab-end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3.5rem;
+}
+
+/* ----------------------------------------
+   Pantallas estrechas
+   ---------------------------------------- */
+@media (max-width: 700px) {
+  .ab-plate__frame {
+    min-height: 7rem;
+    padding: 1.25rem;
+  }
+
+  .ab-plate--step .ab-plate__frame {
+    min-height: 14rem;
+  }
+
+  .ab-stack__op {
+    margin-bottom: 0;
+  }
+
+  .ab-states {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------
+   Movimiento reducido
+
+   Quien ha pedido que las cosas se estén quietas no debería encontrarse una
+   bombilla parpadeando. La farola arranca encendida y las animaciones se
+   quedan en su primer fotograma.
+   ---------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ab-bulb__img--flicker,
+  .ab-bulb__ring,
+  .ab-sprite img {
+    animation: none;
+  }
+
+  .ab-cover::after {
+    transition: none;
+  }
+}
+
+/* ----------------------------------------
+   Papel
+
+   Sin controles, sin penumbra, con la farola encendida y cada capítulo
+   empezando en su hoja.
+   ---------------------------------------- */
+@media print {
+  .nav,
+  .nav__backdrop,
+  .ab-cover__instruction,
+  .ab-cover__skip,
+  .ab-bulb__ring,
+  .ab-compare__btn,
+  .footer {
+    display: none !important;
+  }
+
+  .ab-main,
+  .ab-cover__title,
+  .ab-cover__meta,
+  .ab-cover__byline {
+    opacity: 1 !important;
+    filter: none !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ab-bulb__img--off,
+  .ab-bulb__img--flicker { opacity: 0 !important; animation: none !important; }
+  .ab-bulb__img--on { opacity: 1 !important; }
+
+  .ab-sprite img { animation: none !important; }
+
+  /* Sin esto, las dos mitades del comparador salen una encima de otra. */
+  .ab-compare { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ab-compare__img { grid-area: auto !important; opacity: 1 !important; }
+
+  .ab-cover {
+    min-height: auto;
+    padding-top: 2rem;
+    break-after: page;
+  }
+
+  .ab-chapter {
+    break-before: page;
+    padding-block: 0;
+  }
+
+  .ab-plate__frame,
+  .ab-plate--step .ab-plate__frame {
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+    break-after: avoid;
+  }
+
+  .ab-line {
+    margin-block: 1.25rem;
+  }
+
+  .ab-shot,
+  .ab-plate,
+  .ab-states,
+  .ab-sheet {
+    break-inside: avoid;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  p, li { orphans: 2; widows: 2; }
+}

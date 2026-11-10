@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Out of Sight — Artbook · Julia Fernández</title>
+  <meta name="description" content="The pixel art of Out of Sight, made in 48 hours for the UJI Game Jam 2026 (Spooky Edition), and how it comes together on screen.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Out of Sight — Artbook">
+  <meta property="og:description" content="The sprites of a game made in 48 hours, and the scenes they build.">
+  <meta property="og:type" content="article">
+
+  <meta name="theme-color" content="#0e0a16">
+
+  <!-- El tema y el idioma, antes del primer pintado: decididos más tarde, la
+       página se vería un instante con los colores o el idioma equivocados. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('theme') === 'blue') {
+          document.documentElement.setAttribute('data-theme', 'blue');
+        }
+        var l = localStorage.getItem('lang');
+        if (l !== 'es' && l !== 'en') {
+          var n = (navigator.languages || [navigator.language || 'en'])[0] || 'en';
+          l = n.toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+        }
+        document.documentElement.lang = l;
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/artbook.css?v=9">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body class="ab is-dark">
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav__logo">JF</a>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html#about" class="nav__link"><span data-lang="en">About</span><span data-lang="es">Sobre mí</span></a></li>
+        <li><a href="index.html#projects" class="nav__link"><span data-lang="en">Projects</span><span data-lang="es">Proyectos</span></a></li>
+        <li><a href="index.html#art" class="nav__link"><span data-lang="en">Art</span><span data-lang="es">Arte</span></a></li>
+        <li><a href="index.html#contact" class="nav__link"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></li>
+      </ul>
+      <button class="nav__hamburger" data-aria-label-en="Toggle menu" data-aria-label-es="Abrir el menú" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__backdrop" hidden></div>
+
+  <!-- ======== COVER ========
+       El juego arranca a oscuras y mucha gente cree que está roto. Esta
+       página hace lo mismo, así que lo avisa antes de hacerlo. -->
+  <header class="ab-cover" id="cover">
+    <p class="ab-cover__instruction">
+      <span data-lang="en">This page starts in the dark, just like the game.</span>
+      <span data-lang="es">Esta página empieza a oscuras, igual que el juego.</span>
+      <strong>
+        <span data-lang="en">Click the bulb to turn the light on.</span>
+        <span data-lang="es">Pulsa la bombilla para encender la luz.</span>
+      </strong>
+    </p>
+
+    <div class="ab-cover__scene">
+      <button class="ab-bulb" id="ab-bulb" aria-pressed="false"
+              data-aria-label-en="Turn on the streetlight" data-aria-label-es="Encender la farola"
+              aria-label="Turn on the streetlight">
+        <img class="px ab-bulb__img ab-bulb__img--off" src="assets/images/artbook/pieces/FarolaMenuApagada.png" alt="" width="160" height="80">
+        <img class="px ab-bulb__img ab-bulb__img--flicker" src="assets/images/artbook/pieces/FarolaMenuTitilando.png" alt="" width="160" height="80">
+        <img class="px ab-bulb__img ab-bulb__img--on" src="assets/images/artbook/pieces/FarolaMenuEncendida.png"
+             data-alt-en="The menu streetlight, lit" data-alt-es="La farola del menú, encendida"
+             alt="The menu streetlight, lit" width="160" height="80">
+        <span class="ab-bulb__ring" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="ab-cover__text">
+      <p class="ab-cover__eyebrow">Artbook</p>
+      <h1 class="ab-cover__title">Out of Sight</h1>
+      <p class="ab-cover__meta">
+        <span data-lang="en">UJI Game Jam 2026 · Spooky Edition · 48 hours</span>
+        <span data-lang="es">UJI Game Jam 2026 · Spooky Edition · 48 horas</span>
+      </p>
+      <p class="ab-cover__byline">
+        <span data-lang="en">All art by Julia Fernández Bermejo</span>
+        <span data-lang="es">Todo el arte: Julia Fernández Bermejo</span>
+      </p>
+      <a href="#ab-chapters" class="ab-cover__skip">
+        <span data-lang="en">or skip to the artbook</span>
+        <span data-lang="es">o ir directamente al artbook</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="ab-main" id="ab-chapters">
+
+    <!-- ======== 01 · THE STREET ======== -->
+    <section class="ab-chapter" id="street">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">01</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The street</span><span data-lang="es">La calle</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <figure class="ab-shot reveal">
+          <img src="assets/images/artbook/scenes/juego-calle.jpg"
+               data-alt-en="The street in the game: railings, streetlights, passers-by"
+               data-alt-es="La calle en el juego: verja, farolas, viandantes"
+               alt="The street in the game: railings, streetlights, passers-by"
+               width="1920" height="1080" loading="lazy">
+        </figure>
+
+        <p class="ab-line reveal">
+          <span data-lang="en">The whole game happens on one pavement. These are the pieces it is built from.</span>
+          <span data-lang="es">Todo el juego ocurre sobre una misma acera. Estas son las piezas con las que está hecha.</span>
+        </p>
+
+        <div class="ab-grid reveal">
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:64;--k:7" src="assets/images/artbook/pieces/Muro.png" alt="" width="64" height="48">
+            </div>
+          </figure>
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:12;--k:10" src="assets/images/artbook/pieces/MuroCierreIzquierda.png" alt="" width="12" height="48">
+            </div>
+          </figure>
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:32;--k:10" src="assets/images/artbook/pieces/Suelo.png" alt="" width="32" height="16">
+            </div>
+          </figure>
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:16;--k:14" src="assets/images/artbook/pieces/alcantarilla.png" alt="" width="16" height="9">
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== 02 · THE GHOST ======== -->
+    <section class="ab-chapter ab-chapter--alt" id="ghost">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">02</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The ghost</span><span data-lang="es">El fantasma</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <figure class="ab-shot reveal">
+          <img src="assets/images/artbook/scenes/juego-fantasma.jpg"
+               data-alt-en="The ghost caught under a streetlight" data-alt-es="El fantasma, pillado bajo una farola"
+               alt="The ghost caught under a streetlight" width="1920" height="1080" loading="lazy">
+        </figure>
+
+        <p class="ab-line reveal">
+          <span data-lang="en">One silhouette, two colours. In the dark nobody sees you.</span>
+          <span data-lang="es">Una silueta, dos colores. En la oscuridad no te ven.</span>
+        </p>
+
+        <div class="ab-grid ab-grid--two reveal">
+          <figure class="ab-plate">
+            <div class="ab-plate__frame ab-compare" data-compare>
+              <img class="px ab-compare__img ab-compare__img--a" style="--w:16;--k:14"
+                   src="assets/images/artbook/pieces/FantasmaSideDark.png"
+                   data-alt-en="The ghost in the dark" data-alt-es="El fantasma en la oscuridad"
+                   alt="The ghost in the dark" width="16" height="32">
+              <img class="px ab-compare__img ab-compare__img--b" style="--w:16;--k:14"
+                   src="assets/images/artbook/pieces/FantasmaSideLight.png"
+                   data-alt-en="The ghost in the light" data-alt-es="El fantasma en la luz"
+                   alt="The ghost in the light" width="16" height="32">
+            </div>
+            <button class="ab-compare__btn btn btn--outline" type="button" data-compare-btn>
+              <span class="ab-compare__label ab-compare__label--a">
+                <span data-lang="en">Turn the light on</span><span data-lang="es">Dale la luz</span>
+              </span>
+              <span class="ab-compare__label ab-compare__label--b">
+                <span data-lang="en">Back to the dark</span><span data-lang="es">Vuelve a la oscuridad</span>
+              </span>
+            </button>
+          </figure>
+
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <div class="ab-sprite" style="--w:16;--h:4;--n:2;--k:16;--dur:2.4s">
+                <img src="assets/images/artbook/pieces/FantasmaOjosSpritesheet.png"
+                     data-alt-en="The eyes, blinking" data-alt-es="Los ojos, parpadeando"
+                     alt="The eyes, blinking" width="16" height="8">
+              </div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== 03 · THE HUMANS ======== -->
+    <section class="ab-chapter" id="humans">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">03</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The humans</span><span data-lang="es">Los humanos</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <p class="ab-line reveal">
+          <span data-lang="en">Two passers-by, four frames each.</span>
+          <span data-lang="es">Dos viandantes, cuatro fotogramas cada uno.</span>
+        </p>
+
+        <div class="ab-grid ab-grid--two reveal">
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:16;--k:12" data-frames="NPC1_0.png,NPC1_1.png,NPC1_2.png,NPC1_3.png" data-fps="6"
+                   src="assets/images/artbook/pieces/NPC1_0.png"
+                   data-alt-en="The gentleman, walking" data-alt-es="El caballero, caminando"
+                   alt="The gentleman, walking" width="16" height="32">
+            </div>
+          </figure>
+
+          <figure class="ab-plate">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:16;--k:12" data-frames="NPC2_0.png,NPC2_1.png,NPC2_2.png,NPC2_4.png" data-fps="6"
+                   src="assets/images/artbook/pieces/NPC2_0.png"
+                   data-alt-en="The lady, walking" data-alt-es="La dama, caminando"
+                   alt="The lady, walking" width="16" height="32">
+            </div>
+          </figure>
+        </div>
+
+        <div class="ab-grid ab-grid--two reveal">
+          <figure class="ab-plate ab-plate--wide">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:64;--k:7" src="assets/images/artbook/pieces/NPC1Spritesheet.png" alt="" width="64" height="32">
+            </div>
+          </figure>
+          <figure class="ab-plate ab-plate--wide">
+            <div class="ab-plate__frame">
+              <img class="px" style="--w:64;--k:7" src="assets/images/artbook/pieces/NPC2Spritesheet.png" alt="" width="64" height="32">
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== 04 · THE STREETLIGHT ======== -->
+    <section class="ab-chapter ab-chapter--alt" id="streetlight">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">04</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The streetlight</span><span data-lang="es">La farola</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <p class="ab-line reveal">
+          <span data-lang="en">Lit, it is three sprites stacked: the post, the light, and the lamp head on top.</span>
+          <span data-lang="es">Encendida son tres sprites apilados: el poste, la luz y el remate de la lámpara.</span>
+        </p>
+
+        <div class="ab-stack reveal">
+          <figure class="ab-plate ab-plate--step">
+            <div class="ab-plate__frame"><img class="px" style="--w:64;--k:4" src="assets/images/artbook/scenes/farola-capa1.png" alt="" width="64" height="80"></div>
+            <figcaption class="ab-plate__caption">
+              <span class="ab-plate__label" data-lang="en">the post</span><span class="ab-plate__label" data-lang="es">el poste</span>
+            </figcaption>
+          </figure>
+
+          <span class="ab-stack__op" aria-hidden="true">+</span>
+
+          <figure class="ab-plate ab-plate--step">
+            <div class="ab-plate__frame"><img class="px" style="--w:64;--k:4" src="assets/images/artbook/scenes/farola-capa2.png" alt="" width="64" height="80"></div>
+            <figcaption class="ab-plate__caption">
+              <span class="ab-plate__label" data-lang="en">the light</span><span class="ab-plate__label" data-lang="es">la luz</span>
+            </figcaption>
+          </figure>
+
+          <span class="ab-stack__op" aria-hidden="true">+</span>
+
+          <figure class="ab-plate ab-plate--step">
+            <div class="ab-plate__frame"><img class="px" style="--w:64;--k:4" src="assets/images/artbook/scenes/farola-capa3.png" alt="" width="64" height="80"></div>
+            <figcaption class="ab-plate__caption">
+              <span class="ab-plate__label" data-lang="en">the head</span><span class="ab-plate__label" data-lang="es">el remate</span>
+            </figcaption>
+          </figure>
+
+          <span class="ab-stack__op ab-stack__op--eq" aria-hidden="true">=</span>
+
+          <figure class="ab-plate ab-plate--step ab-plate--result">
+            <div class="ab-plate__frame"><img class="px" style="--w:64;--k:4" src="assets/images/artbook/scenes/farola-juntas.png" alt="" width="64" height="80"></div>
+            <figcaption class="ab-plate__caption">
+              <span class="ab-plate__label" data-lang="en">lit</span>
+              <span class="ab-plate__label" data-lang="es">encendida</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="ab-grid ab-grid--two reveal">
+          <figure class="ab-plate">
+            <div class="ab-plate__frame"><img class="px" style="--w:64;--k:4" src="assets/images/artbook/pieces/FarolaApagada.png" alt="" width="64" height="80"></div>
+            <figcaption class="ab-plate__caption">
+              <span class="ab-plate__label" data-lang="en">off</span><span class="ab-plate__label" data-lang="es">apagada</span>
+            </figcaption>
+          </figure>
+          <figure class="ab-plate">
+            <div class="ab-plate__frame"><img class="px" style="--w:52;--k:7" src="assets/images/artbook/pieces/LuzLinterna.png" alt="" width="52" height="32"></div>
+          </figure>
+        </div>
+
+        <figure class="ab-shot reveal">
+          <img src="assets/images/artbook/scenes/juego-farolas.jpg"
+               data-alt-en="Several streetlights at once, in the game"
+               data-alt-es="Varias farolas a la vez, en el juego"
+               alt="Several streetlights at once, in the game" width="1920" height="1080" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <!-- ======== 05 · THE MENU ======== -->
+    <section class="ab-chapter" id="menu">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">05</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The menu</span><span data-lang="es">El menú</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <p class="ab-line reveal">
+          <span data-lang="en">It opens almost black. Click the bulb and the buttons appear.</span>
+          <span data-lang="es">Abre casi a negro. Pulsa la bombilla y aparecen los botones.</span>
+        </p>
+
+        <div class="ab-shots reveal">
+          <figure class="ab-shot">
+            <img class="px" src="assets/images/artbook/scenes/menu-apagado.png"
+                 data-alt-en="The main menu before the bulb is clicked" data-alt-es="El menú principal antes de pulsar la bombilla"
+                 alt="The main menu before the bulb is clicked" width="960" height="600" loading="lazy">
+            <figcaption>
+              <span data-lang="en">before</span><span data-lang="es">antes</span>
+            </figcaption>
+          </figure>
+          <figure class="ab-shot">
+            <img class="px" src="assets/images/artbook/scenes/menu-encendido.png"
+                 data-alt-en="The main menu once the streetlight is on" data-alt-es="El menú principal con la farola encendida"
+                 alt="The main menu once the streetlight is on" width="960" height="600" loading="lazy">
+            <figcaption>
+              <span data-lang="en">after</span><span data-lang="es">después</span>
+            </figcaption>
+          </figure>
+        </div>
+
+
+        <div class="ab-states reveal">
+          <div class="ab-states__col">
+            <img class="px" src="assets/images/artbook/pieces/BotonPlayIdle1.png" alt="Play, idle" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonPlaySelected1.png" alt="Play, selected" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonPlayPressed1.png" alt="Play, pressed" width="450" height="143">
+          </div>
+          <div class="ab-states__col">
+            <img class="px" src="assets/images/artbook/pieces/BotonCreditsIdle.png" alt="Credits, idle" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonCreditsHighlted.png" alt="Credits, highlighted" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonCreditsPressed.png" alt="Credits, pressed" width="450" height="143">
+          </div>
+          <div class="ab-states__col">
+            <img class="px" src="assets/images/artbook/pieces/BotonBackIdle.png" alt="Back, idle" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonBackHighlted.png" alt="Back, highlighted" width="450" height="143">
+            <img class="px" src="assets/images/artbook/pieces/BotonBackPressed.png" alt="Back, pressed" width="450" height="143">
+          </div>
+        </div>
+        <p class="ab-states__caption">
+          <span class="ab-plate__label" data-lang="en">idle · highlighted · pressed</span>
+          <span class="ab-plate__label" data-lang="es">normal · resaltado · pulsado</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ======== 06 · THE REST ======== -->
+    <section class="ab-chapter ab-chapter--alt" id="pieces">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__label">06</span>
+          <h2 class="section-header__title">
+            <span data-lang="en">The rest of the set</span><span data-lang="es">El resto del decorado</span>
+          </h2>
+          <div class="section-header__line"></div>
+        </div>
+
+        <div class="ab-sheet reveal">
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta1Azul.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta2Azul.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta3Azul.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta4Azul.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta1Morado.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta2Morado.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta3Morado.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:16;--k:9" src="assets/images/artbook/pieces/Planta4Morado.png" alt="" width="16" height="16"></figure>
+          <figure><img class="px" style="--w:90;--k:2" src="assets/images/artbook/pieces/BotonW.png" alt="" width="90" height="90"></figure>
+          <figure><img class="px" style="--w:90;--k:2" src="assets/images/artbook/pieces/BotonA.png" alt="" width="90" height="90"></figure>
+          <figure><img class="px" style="--w:90;--k:2" src="assets/images/artbook/pieces/BotonS.png" alt="" width="90" height="90"></figure>
+          <figure><img class="px" style="--w:90;--k:2" src="assets/images/artbook/pieces/BotonD.png" alt="" width="90" height="90"></figure>
+        </div>
+
+        <figure class="ab-shot reveal">
+          <img src="assets/images/artbook/scenes/juego-linterna.jpg"
+               data-alt-en="A human patrolling with a lantern"
+               data-alt-es="Un humano patrullando con linterna"
+               alt="A human patrolling with a lantern" width="1920" height="1080" loading="lazy">
+        </figure>
+
+        <div class="ab-end reveal">
+          <a href="https://julia-fdez.itch.io/out-of-sight" target="_blank" rel="noopener" class="btn btn--primary">
+            <span data-lang="en">Play on itch.io</span><span data-lang="es">Jugar en itch.io</span>
+          </a>
+          <a href="https://www.youtube.com/watch?v=TXESzYns4bo" target="_blank" rel="noopener" class="btn btn--outline">
+            <span data-lang="en">Watch the trailer</span><span data-lang="es">Ver el tráiler</span>
+          </a>
+          <a href="index.html#projects" class="btn btn--outline">
+            <span data-lang="en">Back to the portfolio</span><span data-lang="es">Volver al portfolio</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__text">&copy; 2026 Julia Fernández. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Language -->
+  <button class="lang-toggle" aria-label="Cambiar a español">ES</button>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" data-aria-label-en="Switch color theme" data-aria-label-es="Cambiar los colores" aria-label="Switch color theme">
+    <div class="theme-toggle__icon"></div>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/i18n.js?v=9" defer></script>
+  <script src="js/main.js?v=9" defer></script>
+  <script src="js/modal.js?v=9" defer></script>
+  <script src="js/artbook.js?v=9" defer></script>
+</body>
+</html>

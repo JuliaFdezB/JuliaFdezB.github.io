@@ -2,6 +2,26 @@
    Project Data
    ======================================== */
 const projectsData = {
+  'out-of-sight': {
+    title: 'Out of Sight',
+    images: ['assets/images/projects/OutOfSight-Portada.jpg'],
+    video: 'https://www.youtube.com/embed/TXESzYns4bo',
+    role: 'Artist',
+    role_es: 'Artista',
+    team: '4 people — Jupeluche',
+    team_es: '4 personas — Jupeluche',
+    duration: '48 hours · game jam',
+    duration_es: '48 horas · game jam',
+    language: 'English',
+    language_es: 'Inglés',
+    tech: ['Unity', 'Krita', 'Pixel Art'],
+    description: 'A ghost on its way to visit its ghost grandparents has to cross a street full of humans — and both sides are frightened of each other. In the dark nobody sees you; but if a human stands under a streetlight at the same time as you, you are given away and sent back to the last checkpoint. Some of them patrol with torches, and a drain is the only place to hide. Made in 48 hours for the UJI Game Jam 2026 (Spooky Edition), on the theme "If You Can\'t See It, It Doesn\'t Exist!" and the optional SLSO8 palette. I made all the art in the game except the checkpoint statue: characters, environment, lighting and the whole interface — including a main menu that opens almost pitch black, where you have to click the flickering bulb before the buttons appear. I also built the itch.io page and cut the trailer from footage captured inside Unity.',
+    description_es: 'Un fantasma que va a visitar a sus abuelos fantasmas tiene que cruzar una calle llena de humanos — y los dos bandos se asustan el uno del otro. En la oscuridad no te ve nadie; pero si un humano queda bajo la luz de una farola al mismo tiempo que tú, te delata y vuelves al último checkpoint. Algunos patrullan con linterna, y una alcantarilla es el único sitio donde esconderse. Hecho en 48 horas para la UJI Game Jam 2026 (Spooky Edition), con el tema "If You Can\'t See It, It Doesn\'t Exist!" y la paleta opcional SLSO8. Hice todo el arte del juego salvo la estatua del checkpoint: personajes, escenario, iluminación y la interfaz entera — incluido un menú principal que abre casi a oscuras, en el que hay que clicar la bombilla que titila para que aparezcan los botones. También monté la página de itch.io y edité el tráiler con grabaciones capturadas dentro de Unity.',
+    links: [
+      { label: 'Play on itch.io', label_es: 'Jugar en itch.io', url: 'https://julia-fdez.itch.io/out-of-sight', icon: 'itchio' },
+      { label: 'Open the Artbook', label_es: 'Abrir el artbook', url: 'artbook-out-of-sight.html', icon: 'doc' }
+    ]
+  },
   'ptolemys-night': {
     title: 'Ptolemy\'s Night',
     images: ['assets/images/projects/PN-PortadaWeb.jpg'],
@@ -60,6 +80,20 @@ const projectsData = {
 };
 
 /* ========================================
+   Fichas en dos idiomas
+
+   Cada proyecto puede traer su versión en español en un campo con el
+   sufijo _es. Donde no la haya se queda la inglesa, que es como estaba
+   todo hasta ahora: las fichas viejas siguen funcionando sin tocarlas.
+   ======================================== */
+function pick(data, field) {
+  const es = document.documentElement.lang === "es";
+  return (es && data[field + "_es"]) || data[field];
+}
+
+let currentProjectId = null;
+
+/* ========================================
    Project Modal
    ======================================== */
 const modalOverlay = document.querySelector('.modal-overlay');
@@ -78,8 +112,10 @@ let currentImages = [];
 let currentImageIndex = 0;
 
 function openProjectModal(projectId) {
+  if (!modalOverlay) return;
   const data = projectsData[projectId];
   if (!data) return;
+  currentProjectId = projectId;
 
   modalTitle.textContent = data.title;
 
@@ -128,24 +164,24 @@ function openProjectModal(projectId) {
   modalMeta.innerHTML = `
     <span class="modal__meta-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      ${data.role}
+      ${pick(data, "role")}
     </span>
     <span class="modal__meta-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      ${data.team}
+      ${pick(data, "team")}
     </span>
     <span class="modal__meta-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      ${data.duration}
+      ${pick(data, "duration")}
     </span>
     <span class="modal__meta-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      ${data.language}
+      ${pick(data, "language")}
     </span>
   `;
 
   // Description
-  modalDescription.textContent = data.description;
+  modalDescription.textContent = pick(data, "description");
 
   // Tech
   const techTitle = document.querySelector('.modal__section-title');
@@ -162,7 +198,7 @@ function openProjectModal(projectId) {
 
   // Links
   modalLinks.innerHTML = data.links
-    .map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="btn btn--outline">${l.label}</a>`)
+    .map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="btn btn--outline">${(document.documentElement.lang === "es" && l.label_es) || l.label}</a>`)
     .join('');
 
   if (!modalOverlay.classList.contains('active')) {
@@ -186,7 +222,7 @@ function updateCarouselImage() {
 }
 
 function closeModal() {
-  if (!modalOverlay.classList.contains('active')) return;
+  if (!modalOverlay?.classList.contains('active')) return;
   const video = modalCarousel.querySelector('video');
   if (video) video.pause();
   const iframe = modalCarousel.querySelector('iframe');
@@ -195,18 +231,18 @@ function closeModal() {
   window.freezeBackground(false);
 }
 
-modalClose.addEventListener('click', closeModal);
-modalOverlay.addEventListener('click', (e) => {
+modalClose?.addEventListener('click', closeModal);
+modalOverlay?.addEventListener('click', (e) => {
   if (e.target === modalOverlay) closeModal();
 });
 
-carouselPrev.addEventListener('click', () => {
+carouselPrev?.addEventListener('click', () => {
   if (currentImages.length === 0) return;
   currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
   updateCarouselImage();
 });
 
-carouselNext.addEventListener('click', () => {
+carouselNext?.addEventListener('click', () => {
   if (currentImages.length === 0) return;
   currentImageIndex = (currentImageIndex + 1) % currentImages.length;
   updateCarouselImage();
@@ -220,6 +256,7 @@ carouselNext.addEventListener('click', () => {
    page with the finger never changes the picture by accident.
    ======================================== */
 function onSwipe(element, onLeft, onRight) {
+  if (!element) return;
   const MIN = 45;
   let startX = 0;
   let startY = 0;
@@ -271,7 +308,7 @@ document.addEventListener('keydown', (e) => {
     closeModal();
     closeLightbox();
   }
-  if (modalOverlay.classList.contains('active')) {
+  if (modalOverlay?.classList.contains('active')) {
     if (e.key === 'ArrowLeft') carouselPrev.click();
     if (e.key === 'ArrowRight') carouselNext.click();
   }
@@ -338,21 +375,21 @@ const cvFiles = {
   es: 'cv/cv_es.html'
 };
 
-document.getElementById('view-cv-btn').addEventListener('click', () => {
+document.getElementById('view-cv-btn')?.addEventListener('click', () => {
   if (cvOverlay.classList.contains('active')) return;
   cvOverlay.classList.add('active');
   window.freezeBackground(true);
 });
 
 function closeCvModal() {
-  if (!cvOverlay.classList.contains('active')) return;
+  if (!cvOverlay?.classList.contains('active')) return;
   cvOverlay.classList.remove('active');
   window.freezeBackground(false);
 }
 
-cvCloseBtn.addEventListener('click', closeCvModal);
+cvCloseBtn?.addEventListener('click', closeCvModal);
 
-cvOverlay.addEventListener('click', (e) => {
+cvOverlay?.addEventListener('click', (e) => {
   if (e.target === cvOverlay) closeCvModal();
 });
 
@@ -370,7 +407,7 @@ const cvPdfFiles = {
   es: 'cv/JuliaFernandezBermejoCVespañol.pdf'
 };
 
-cvDownloadBtn.addEventListener('click', () => {
+cvDownloadBtn?.addEventListener('click', () => {
   const link = document.createElement('a');
   link.href = cvPdfFiles[currentCvLang];
   link.download = '';
@@ -378,7 +415,30 @@ cvDownloadBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && cvOverlay.classList.contains('active')) {
+  if (e.key === 'Escape' && cvOverlay?.classList.contains('active')) {
     closeCvModal();
   }
+});
+
+/* ========================================
+   Cambiar de idioma con una ficha abierta
+
+   Se reescriben los textos en su sitio en vez de volver a abrir la ficha:
+   rehacerla entera recrea el carrusel, y eso reinicia el tráiler a la mitad.
+   ======================================== */
+document.addEventListener('langchange', () => {
+  if (!currentProjectId || !modalOverlay?.classList.contains('active')) return;
+  const data = projectsData[currentProjectId];
+  if (!data) return;
+
+  const fields = ['role', 'team', 'duration', 'language'];
+  modalMeta.querySelectorAll('.modal__meta-item').forEach((item, i) => {
+    if (fields[i]) item.lastChild.textContent = '\n      ' + pick(data, fields[i]) + '\n    ';
+  });
+
+  modalDescription.textContent = pick(data, 'description');
+
+  modalLinks.innerHTML = data.links
+    .map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="btn btn--outline">${(document.documentElement.lang === 'es' && l.label_es) || l.label}</a>`)
+    .join('');
 });
