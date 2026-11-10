@@ -109,17 +109,14 @@ document.querySelectorAll('[data-compare]').forEach(stage => {
 });
 
 /* ----------------------------------------
-   Idioma
+   La pantalla de menú
 
-   Las piezas llevan su descripción en los dos idiomas y i18n.js intercambia
-   el atributo. Las que viven dentro del visor de imágenes se escriben en el
-   momento de abrirlo, así que no hay nada que hacer aquí salvo asegurarse de
-   que el texto alternativo que ya se mostraba se actualiza también.
+   El mismo gesto que pide el juego, aquí en pequeño: apagada no se ve
+   casi nada y al pulsar aparecen los botones.
    ---------------------------------------- */
-document.addEventListener('langchange', () => {
-  const lightboxImg = document.querySelector('.lightbox-overlay img');
-  if (!lightboxImg || !lightboxImg.src) return;
-  const source = [...document.querySelectorAll('.ab-plate img')]
-    .find(img => img.src === lightboxImg.src);
-  if (source) lightboxImg.alt = source.alt;
+document.querySelectorAll("[data-menu]").forEach(screen => {
+  screen.addEventListener("click", () => {
+    const on = screen.classList.toggle("is-on");
+    screen.setAttribute("aria-pressed", String(on));
+  });
 });
