@@ -1,0 +1,915 @@
+/* ========================================
+   Artbook — Out of Sight
+
+   Hoja propia de la página del artbook. Se carga después de style.css y
+   depende de sus variables: aquí no hay ni un color escrito a mano, salvo
+   los ocho de la paleta SLSO8, que no son decoración sino el contenido del
+   que habla el capítulo 01.
+   ======================================== */
+
+/* ----------------------------------------
+   Pixel art
+
+   Las piezas miden dieciséis píxeles de lado y pesan menos de un kilobyte.
+   No se reescalan en disco: se sirven tal cual y se agrandan aquí, con el
+   navegador obligado a repetir el píxel en vez de difuminarlo. Cada lámina
+   dice en su marca cuántos píxeles de ancho tiene (--w) y por cuánto se
+   multiplica (--k), de manera que el aumento sea siempre un número entero y
+   ningún píxel salga de distinto tamaño que su vecino.
+   ---------------------------------------- */
+.px {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: calc(var(--w, 16) * var(--k, 8) * 1px);
+  max-width: 100%;
+  height: auto;
+}
+
+/* ----------------------------------------
+   La portada a oscuras
+
+   El juego abre con la pantalla casi vacía y hay que pulsar la bombilla para
+   que aparezcan los botones. Esta página hace lo mismo. Todo lo que viene
+   después sigue estando ahí y sigue pudiéndose leer con el teclado: lo que
+   cambia es cuánto se ve.
+   ---------------------------------------- */
+.ab-cover {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 6vw, 4rem);
+  padding: 6rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Un halo que solo existe cuando la farola está encendida. */
+.ab-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 50% at 50% 38%, var(--accent-glow), transparent 70%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.ab.is-lit .ab-cover::after {
+  opacity: 0.5;
+}
+
+.ab-cover__scene {
+  display: flex;
+  justify-content: center;
+}
+
+.ab-bulb {
+  position: relative;
+  display: block;
+  width: calc(160 * 3px);
+  max-width: 90vw;
+  aspect-ratio: 160 / 80;
+  border-radius: var(--radius-md);
+  transition: transform var(--transition-medium);
+}
+
+.ab-bulb:hover {
+  transform: scale(1.03);
+}
+
+.ab-bulb:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 8px;
+}
+
+.ab-bulb__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.ab-bulb__img--off { opacity: 1; }
+
+/* El titileo: el fotograma intermedio aparece a saltos, como una bombilla
+   que no termina de arrancar. */
+.ab.is-dark .ab-bulb__img--flicker {
+  animation: ab-flicker 2.4s steps(1, end) infinite;
+}
+
+@keyframes ab-flicker {
+  0%, 56%, 62%, 70%, 100% { opacity: 0; }
+  58%, 66% { opacity: 1; }
+}
+
+.ab.is-lit .ab-bulb__img--off,
+.ab.is-lit .ab-bulb__img--flicker { opacity: 0; animation: none; }
+.ab.is-lit .ab-bulb__img--on { opacity: 1; }
+
+.ab.is-lit .ab-bulb { cursor: default; }
+
+.ab-cover__text {
+  max-width: 40rem;
+}
+
+.ab-cover__eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  transition: color 1s ease;
+}
+
+.ab-cover__title {
+  font-size: clamp(2.5rem, 9vw, 5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: color 1s ease, text-shadow 1s ease;
+}
+
+.ab.is-lit .ab-cover__eyebrow { color: var(--accent-secondary); }
+
+.ab.is-lit .ab-cover__title {
+  color: var(--text-primary);
+  text-shadow: 0 0 40px var(--accent-glow);
+}
+
+.ab-cover__meta,
+.ab-cover__byline {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  transition: color 1s ease;
+}
+
+.ab.is-lit .ab-cover__meta { color: var(--text-secondary); }
+.ab.is-lit .ab-cover__byline { color: var(--text-secondary); }
+
+/* La pista. Está desde el primer instante para que nadie piense que la
+   página está rota de verdad — que es justo lo que le pasa al juego. */
+.ab-cover__hint {
+  margin-top: 2.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  color: var(--accent-secondary);
+  animation: ab-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes ab-breathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+.ab.is-lit .ab-cover__hint {
+  opacity: 0;
+  animation: none;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.ab-cover__skip {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.ab-cover__skip:hover {
+  color: var(--text-secondary);
+  border-bottom-color: var(--text-muted);
+}
+
+/* Mientras no se encienda la luz, el libro se intuye y poco más. */
+.ab-main {
+  opacity: 0.08;
+  filter: saturate(0.2);
+  transition: opacity 1.4s ease, filter 1.4s ease;
+}
+
+.ab.is-lit .ab-main {
+  opacity: 1;
+  filter: none;
+}
+
+/* ----------------------------------------
+   Capítulos
+   ---------------------------------------- */
+.ab-chapter {
+  padding-block: var(--section-padding);
+}
+
+.ab-chapter--alt {
+  background: var(--bg-secondary);
+}
+
+.ab-intro {
+  max-width: 44rem;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.ab-intro p {
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+}
+
+.ab-subhead {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  text-align: center;
+  margin: 4rem 0 2rem;
+  color: var(--text-primary);
+}
+
+.ab-note {
+  max-width: 40rem;
+  margin: 2.5rem auto 0;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+.ab-note code,
+.ab-intro code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+  color: var(--accent-secondary);
+}
+
+.ab-quote {
+  max-width: 42rem;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+}
+
+.ab-quote p {
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 4.5vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ab-quote cite {
+  display: block;
+  margin-top: 1rem;
+  font-style: normal;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------
+   Láminas
+   ---------------------------------------- */
+.ab-plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ab-plate__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 9rem;
+  padding: 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* El botón antes de encender la luz: en el juego está casi perdido sobre el
+   fondo, y enseñarlo sobre una tarjeta clara sería mentir. */
+.ab-plate__frame--dim {
+  background: var(--bg-primary);
+}
+
+.ab-plate__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.ab-plate__file {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* El tamaño real, siempre al lado. La gracia del libro está en la distancia
+   entre lo que mide la pieza y lo grande que se ve. */
+.ab-plate__size {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-secondary);
+}
+
+.ab-plate--hero {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.ab-plate--hero .ab-plate__frame {
+  min-height: 22rem;
+}
+
+.ab-plate--step .ab-plate__frame {
+  min-height: 25rem;
+  align-items: flex-end;
+}
+
+.ab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.ab-grid--two {
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.ab-grid--small {
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.ab-grid--tall .ab-plate__frame {
+  min-height: 20rem;
+  align-items: flex-end;
+}
+
+/* Las cuatro generaciones de la farola, en fila y alineadas por el suelo.
+   Todas al mismo aumento y cada una ocupando lo que ocupa: esa diferencia
+   de anchura ES lo que cuenta la lámina, el lienzo ensanchándose de
+   dieciséis a ciento sesenta píxeles. Si se reparten el ancho a partes
+   iguales, la comparación desaparece. En una pantalla estrecha la tira se
+   arrastra de lado antes que encogerse. */
+.ab-sequence {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap);
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+}
+
+.ab-sequence .ab-plate {
+  flex: 0 0 auto;
+}
+
+.ab-sequence .ab-plate__frame {
+  width: auto;
+}
+
+/* ----------------------------------------
+   Comparador claro / oscuro
+
+   La mecánica del juego, convertida en el mando del libro.
+   ---------------------------------------- */
+.ab-compare {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.ab-compare__img {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s ease;
+}
+
+.ab-compare__img--b { opacity: 0; }
+
+.ab-compare.is-b .ab-compare__img--a { opacity: 0; }
+.ab-compare.is-b .ab-compare__img--b { opacity: 1; }
+
+@media (hover: hover) {
+  .ab-grid--small .ab-compare:hover .ab-compare__img--a { opacity: 0; }
+  .ab-grid--small .ab-compare:hover .ab-compare__img--b { opacity: 1; }
+  .ab-grid--small .ab-compare.is-b:hover .ab-compare__img--a { opacity: 1; }
+  .ab-grid--small .ab-compare.is-b:hover .ab-compare__img--b { opacity: 0; }
+}
+
+.ab-compare__btn {
+  cursor: pointer;
+}
+
+.ab-compare__label--b { display: none; }
+.ab-compare__btn.is-b .ab-compare__label--a { display: none; }
+.ab-compare__btn.is-b .ab-compare__label--b { display: inline; }
+
+/* ----------------------------------------
+   Animación por fotogramas
+
+   Las hojas de sprites se mueven con la hoja entera de fondo y un salto por
+   fotograma, sin intermedios: un desvanecido entre dos dibujos de ocho
+   píxeles los convertiría en barro.
+   ---------------------------------------- */
+.ab-sprite {
+  position: relative;
+  width: calc(var(--w) * var(--k) * 1px);
+  height: calc(var(--h) * var(--k) * 1px);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ab-sprite img {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: calc(var(--w) * var(--n) * var(--k) * 1px);
+  height: calc(var(--h) * var(--k) * 1px);
+  max-width: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  animation: ab-sprite-play var(--dur, 1s) steps(var(--n)) infinite;
+}
+
+@keyframes ab-sprite-play {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(var(--w) * var(--n) * var(--k) * -1px)); }
+}
+
+/* ----------------------------------------
+   SLSO8
+
+   Los únicos colores escritos a mano de toda la hoja. No visten la página:
+   son de lo que habla el capítulo, la paleta que proponía la jam.
+   ---------------------------------------- */
+.ab-palette {
+  --slso8-1: #0d2b45;
+  --slso8-2: #203c56;
+  --slso8-3: #544e68;
+  --slso8-4: #8d697a;
+  --slso8-5: #d08159;
+  --slso8-6: #ffaa5e;
+  --slso8-7: #ffd4a3;
+  --slso8-8: #ffecd6;
+
+  /* Ocho en fila: partida en dos renglones deja de leerse como una paleta
+     y pasa a parecer una rejilla cualquiera. */
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+  max-width: 56rem;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.ab-swatch {
+  aspect-ratio: 3 / 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0.625rem;
+  border-radius: var(--radius-sm);
+}
+
+.ab-swatch span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  /* El código, siempre legible: claro sobre los cuatro oscuros de la paleta
+     y oscuro sobre los cuatro claros. */
+  color: var(--slso8-8);
+}
+
+.ab-swatch--1 { background: var(--slso8-1); }
+.ab-swatch--2 { background: var(--slso8-2); }
+.ab-swatch--3 { background: var(--slso8-3); }
+.ab-swatch--4 { background: var(--slso8-4); }
+.ab-swatch--5 { background: var(--slso8-5); }
+.ab-swatch--6 { background: var(--slso8-6); }
+.ab-swatch--7 { background: var(--slso8-7); }
+.ab-swatch--8 { background: var(--slso8-8); }
+
+.ab-swatch--6 span,
+.ab-swatch--7 span,
+.ab-swatch--8 span { color: var(--slso8-1); }
+
+.ab-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--gap);
+  max-width: 56rem;
+  margin: 3rem auto 0;
+}
+
+.ab-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.ab-stat strong {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ----------------------------------------
+   Los haces de un píxel
+
+   Ocho archivos que, puestos en fila, son una luz apagándose.
+   ---------------------------------------- */
+.ab-beams {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: clamp(2rem, 6vw, 4rem) 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-beam-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Una tira de un píxel de alto es invisible: aquí se le da cuerpo sin tocar
+   su anchura, que es el dato que importa. */
+.ab-beam-row .px {
+  height: 10px;
+}
+
+.ab-beams__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+/* ----------------------------------------
+   Los botones del menú
+   ---------------------------------------- */
+.ab-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ab-button-row .px {
+  width: 15rem;
+}
+
+/* ----------------------------------------
+   Cronología
+   ---------------------------------------- */
+.ab-timeline {
+  max-width: 44rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ab-timeline li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1.25rem;
+  padding: 1.125rem 0;
+  border-left: 2px solid var(--border-color);
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.ab-timeline li::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 1.5rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-color);
+}
+
+.ab-timeline li.is-long::before,
+.ab-timeline li.is-last::before {
+  background: var(--accent-primary);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.ab-timeline__time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: var(--accent-secondary);
+  padding-top: 0.125rem;
+}
+
+.ab-timeline__what {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.ab-timeline li.is-last .ab-timeline__what {
+  color: var(--text-primary);
+}
+
+/* ----------------------------------------
+   Créditos
+   ---------------------------------------- */
+.ab-credits {
+  max-width: 46rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ab-credits__lead {
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.ab-credits__list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem 1.5rem;
+  text-align: left;
+  padding: 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-credits__list dt {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding-top: 0.125rem;
+}
+
+.ab-credits__list dd {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.ab-credits__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+/* ----------------------------------------
+   Pantallas estrechas
+   ---------------------------------------- */
+@media (max-width: 700px) {
+  .ab-plate__frame {
+    min-height: 7rem;
+    padding: 1.25rem;
+  }
+
+  .ab-plate--hero .ab-plate__frame,
+  .ab-plate--step .ab-plate__frame,
+  .ab-grid--tall .ab-plate__frame {
+    min-height: 15rem;
+  }
+
+  .ab-timeline li {
+    grid-template-columns: 1fr;
+    gap: 0.375rem;
+  }
+
+  .ab-credits__list {
+    grid-template-columns: 1fr;
+    gap: 0.25rem 0;
+  }
+
+  .ab-credits__list dd {
+    margin-bottom: 1rem;
+  }
+}
+
+/* ----------------------------------------
+   Movimiento reducido
+
+   Quien ha pedido que las cosas se estén quietas no debería encontrarse una
+   bombilla parpadeando ni un ciclo de andar en bucle. La farola arranca
+   encendida y las animaciones se quedan en su primer fotograma.
+   ---------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ab-bulb__img--flicker,
+  .ab-cover__hint {
+    animation: none;
+  }
+
+  .ab-sprite img {
+    animation: none;
+  }
+
+  .ab-cover::after {
+    transition: none;
+  }
+}
+
+/* ----------------------------------------
+   Papel
+
+   El artbook impreso: sin controles, sin penumbra, con la farola encendida y
+   cada capítulo empezando en su hoja.
+   ---------------------------------------- */
+@media print {
+  .nav,
+  .nav__backdrop,
+  .ab-cover__hint,
+  .ab-cover__skip,
+  .ab-compare__btn,
+  .lightbox-overlay,
+  .footer {
+    display: none !important;
+  }
+
+  .ab-main,
+  .ab-cover__title,
+  .ab-cover__meta,
+  .ab-cover__byline {
+    opacity: 1 !important;
+    filter: none !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ab-bulb__img--off,
+  .ab-bulb__img--flicker { opacity: 0 !important; animation: none !important; }
+  .ab-bulb__img--on { opacity: 1 !important; }
+
+  .ab-sprite img { animation: none !important; }
+
+  /* Sin esto, las dos mitades del comparador salen una encima de otra. */
+  .ab-compare { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ab-compare__img { grid-area: auto !important; opacity: 1 !important; }
+
+  .ab-cover {
+    min-height: auto;
+    padding-top: 2rem;
+    break-after: page;
+  }
+
+  .ab-chapter {
+    break-before: page;
+    padding-block: 0;
+  }
+
+  .ab-plate,
+  .ab-stat,
+  .ab-timeline li,
+  .ab-credits__list {
+    break-inside: avoid;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ----------------------------------------
+   Clips del proceso
+
+   Son grabaciones de la jam aceleradas. No se precargan: entre los tres
+   suman varios megas y la mayoría de quien entra al artbook viene a ver el
+   arte, no a verlo dibujarse. La miniatura basta hasta que alguien le da.
+   ---------------------------------------- */
+.ab-clips {
+  display: grid;
+  align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--gap);
+}
+
+.ab-clip {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ab-clip video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.ab-clip figcaption {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.ab-clip__when {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--accent-secondary);
+  margin-bottom: 0.25rem;
+}
+
+/* En papel queda la miniatura, que es lo único que un vídeo puede dar ahí. */
+@media print {
+  .ab-clip video {
+    break-inside: avoid;
+  }
+}
+
+/* ----------------------------------------
+   Ajustes de papel
+
+   En pantalla los marcos tienen una altura mínima generosa para que las
+   láminas respiren; en papel esa altura se convierte en páginas medio
+   vacías, así que cada marco pasa a ocupar lo que ocupa su pieza.
+   ---------------------------------------- */
+@media print {
+  .ab-plate__frame,
+  .ab-plate--hero .ab-plate__frame,
+  .ab-plate--step .ab-plate__frame,
+  .ab-grid--tall .ab-plate__frame {
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  .ab-intro,
+  .ab-quote {
+    margin-bottom: 1.5rem;
+  }
+
+  .ab-subhead {
+    margin: 1.5rem 0 1rem;
+    break-after: avoid;
+  }
+
+  .ab-note {
+    margin-top: 1.25rem;
+    break-before: avoid;
+  }
+
+  .section-header {
+    margin-bottom: 1.5rem;
+    break-after: avoid;
+  }
+
+  /* La tira de la farola no se arrastra en papel: se reparte en la hoja. */
+  .ab-sequence {
+    overflow: visible;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* El parpadeo se queda en su primer fotograma. */
+  .ab-sprite img { animation: none; }
+
+  p, li { orphans: 2; widows: 2; }
+}
