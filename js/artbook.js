@@ -107,16 +107,3 @@ document.querySelectorAll('[data-compare]').forEach(stage => {
   stage.addEventListener('click', flip);
   button?.addEventListener('click', flip);
 });
-
-/* ----------------------------------------
-   La pantalla de menú
-
-   El mismo gesto que pide el juego, aquí en pequeño: apagada no se ve
-   casi nada y al pulsar aparecen los botones.
-   ---------------------------------------- */
-document.querySelectorAll("[data-menu]").forEach(screen => {
-  screen.addEventListener("click", () => {
-    const on = screen.classList.toggle("is-on");
-    screen.setAttribute("aria-pressed", String(on));
-  });
-});

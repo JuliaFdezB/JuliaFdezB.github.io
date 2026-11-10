@@ -419,84 +419,30 @@
   to { transform: translateY(calc(var(--h) * var(--n) * var(--k) * -1px)); }
 }
 
-/* ----------------------------------------
-   La pantalla de menú
 
-   Las piezas del menú colocadas como se colocan en el juego: la farola
-   detrás y los botones bajo su luz. Apagada no se ve casi nada, que es
-   justo lo que le pasa a quien abre el juego por primera vez.
+/* ----------------------------------------
+   Capturas en pareja
+
+   Dos estados de la misma pantalla, uno al lado del otro.
    ---------------------------------------- */
-.ab-menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+.ab-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--gap);
   margin-block: 2rem;
 }
 
-.ab-menu__screen {
-  position: relative;
-  display: block;
-  width: min(60rem, 100%);
-  aspect-ratio: 160 / 80;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  cursor: pointer;
+.ab-shots .ab-shot {
+  margin-block: 0;
 }
 
-.ab-menu__lamp {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  transition: opacity 0.5s ease;
-}
-
-.ab-menu__lamp--on { opacity: 0; }
-.ab-menu__screen.is-on .ab-menu__lamp--off { opacity: 0; }
-.ab-menu__screen.is-on .ab-menu__lamp--on { opacity: 1; }
-
-.ab-menu__buttons {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2%;
-  width: 42%;
-}
-
-.ab-menu__slot {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 450 / 143;
-}
-
-.ab-menu__btn {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  transition: opacity 0.5s ease;
-}
-
-.ab-menu__btn--on { opacity: 0; }
-.ab-menu__screen.is-on .ab-menu__btn--off { opacity: 0; }
-.ab-menu__screen.is-on .ab-menu__btn--on { opacity: 1; }
-
-.ab-menu__hint {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
+.ab-shot figcaption {
+  padding: 0.75rem;
   text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-secondary);
+  border-top: 1px solid var(--border-color);
 }
 
 /* ----------------------------------------
@@ -622,7 +568,6 @@
   .ab-cover__skip,
   .ab-bulb__ring,
   .ab-compare__btn,
-  .ab-menu__hint,
   .footer {
     display: none !important;
   }
@@ -641,12 +586,6 @@
   .ab-bulb__img--on { opacity: 1 !important; }
 
   .ab-sprite img { animation: none !important; }
-
-  /* El menú impreso se enseña encendido, que es donde se ve algo. */
-  .ab-menu__lamp--off,
-  .ab-menu__btn--off { opacity: 0 !important; }
-  .ab-menu__lamp--on,
-  .ab-menu__btn--on { opacity: 1 !important; }
 
   /* Sin esto, las dos mitades del comparador salen una encima de otra. */
   .ab-compare { grid-template-columns: 1fr 1fr; gap: 1rem; }
